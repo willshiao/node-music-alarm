@@ -18,12 +18,16 @@ router.get('/media', (req, res) => {
     });
 });
 
-router.get('/player/:fileName', (req, res) => {
+router.get('/play/:fileName', (req, res) => {
   const fileName = req.params.fileName;
-  if(!fileName) return res.json({success: false});
-  logger.debug('Playing: ', fileName);
+  if(!fileName) return res.json({ success: false });
+
   player.playMedia(path.join(config.get('media.dir'), fileName));
-  res.json({success: true});
+  res.json({ success: true });
+});
+
+router.get('/stop', (req, res) => {
+  res.json({ success: player.stopMedia() });
 });
 
 module.exports = router;
