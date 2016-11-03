@@ -11,6 +11,20 @@ router.get('/', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
+router.post('/new', (req, res) => {
+  if(!req.body || !req.body.path || !req.body.name)
+    return res.failMsg('Missing one or more arguements');
+
+  new Media({
+    path: req.body.path,
+    name: req.body.name,
+  }).save()
+    .then(() => {
+      res.successJson();
+    })
+    .catch(err => res.errorJson(err));
+});
+
 router.get('/random', (req, res) => {
   Media.getRandom()
     .then(row => {

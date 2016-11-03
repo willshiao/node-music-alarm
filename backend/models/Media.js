@@ -1,7 +1,8 @@
 'use strict';
 
-const db = require('../lib/db');
 const path = require('path');
+const Promise = require('bluebird');
+const db = require('../lib/db');
 
 class Media {
   constructor(data) {
@@ -17,11 +18,13 @@ class Media {
   }
 
   static getById(id) {
-    return new Media(db.get('SELECT * FROM `media` WHERE id=?', id));
+    return db.get('SELECT * FROM `media` WHERE id=?', id)
+      .then(m => Promise.resolve(new Media(m)));
   }
 
   static getRandom() {
-    return new Media(db.get('SELECT * FROM `media` ORDER BY RANDOM() LIMIT 1'));
+    return db.get('SELECT * FROM `media` ORDER BY RANDOM() LIMIT 1')
+      .then(m => Promise.resolve(new Media(m)));
     //bad performance on large tables, but shouldn't be a problem
     //  since the app will probably have relatively few rows
   }
