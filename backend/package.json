@@ -1,0 +1,25 @@
+{
+  "name": "node-music-alarm",
+  "version": "1.0.0",
+  "description": "A alarm system that plays music and quizzes the user on the song's name to stop the alarm.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willshiao/node-music-alarm.git"
+  },
+  "keywords": [
+    "music",
+    "alarm",
+    "quiz",
+    "song"
+  ],
+  "author": "William Shiao <willshiao@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/willshiao/node-music-alarm/issues"
+  },
+  "homepage": "https://github.com/willshiao/node-music-alarm#readme"
+}
