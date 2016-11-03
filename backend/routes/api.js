@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const config = require('config');
 const router = require('express').Router();
+const bodyParser = require('body-parser');
 
 const Media = require('../models/Media');
 const player = require('../lib/player');
@@ -12,22 +13,23 @@ const alarmRoutes = require('./api/alarms');
 
 router.use('/media', mediaRoutes);
 router.use('/alarms', alarmRoutes);
+router.use(bodyParser.json());
 
 router.get('/test', (req, res) => {
   res.send('OK');
 });
 
 router.get('/play/:fileName', (req, res) => {
-  let fileName = req.params.fileName;
+  const fileName = req.params.fileName;
   if(!fileName) return res.failMsg('Invalid parameters');
-  fileName = filterPath(path.join(config.get('media.dir'), fileName));
+  const media = new Media({
+    name: fileName,
+    path: path.join(config.get('media.dir'), fileName),
+  });
 
-  fs.stat(fileName, (err, stat) => {
+  fs.stat(media.path, (err, stat) => {
     if(err == null) {
-      player.playMedia(new Media({
-        path: fileName,
-        name: fileName
-      }));
+      player.playMedia(media);
       res.successJson();
     } else if(err.code == 'ENOENT') {
       res.failMsg('File not found');
@@ -41,10 +43,5 @@ router.get('/stop', (req, res) => {
   if(player.stopMedia()) return res.successJson();
   return res.failJson('No media playing');
 });
-
-
-function filterPath(pathStr) { //Prevent directory tranversals
-  return path.normalize(pathStr).replace(/^(\.\.[\/\\])+/, '');
-}
 
 module.exports = router;

@@ -1,12 +1,13 @@
 'use strict';
 
 const db = require('../lib/db');
+const path = require('path');
 
 class Media {
   constructor(data) {
     if(data.id) this.id = data.id;
     this.name = data.name;
-    this.path = data.path;
+    this.path = filterPath(data.path);
   }
 
   save() {
@@ -33,6 +34,10 @@ class Media {
         );
       });
   }
+}
+
+function filterPath(pathStr) { //Prevent directory tranversals
+  return path.normalize(pathStr).replace(/^(\.\.[\/\\])+/, '');
 }
 
 module.exports = Media;
