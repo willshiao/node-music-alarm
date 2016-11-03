@@ -1,11 +1,15 @@
 'use strict';
 
-const fs = require('fs');
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
 const db = require('sqlite');
 const config = require('config');
 
 db.createTables = function() {
-  return db.run(fs.readFileSync(config.get('db.schema')));
+  return fs.readFileAsync(config.get('db.schema'), 'utf8')
+    .then(data => {
+      return db.exec(data);
+    });
 };
 
 module.exports = db;

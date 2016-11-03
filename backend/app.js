@@ -39,4 +39,5 @@ fs.statAsync(config.get('db.path'))
     app.listen(port, () => {
       logger.info(`App listening on port ${port}.`);
     });
-  });
+  })
+  .catch(logger.error);

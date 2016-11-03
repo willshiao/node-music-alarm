@@ -34,9 +34,3 @@ CREATE TABLE "media" (
 "name"  TEXT NOT NULL,
 "path"  TEXT NOT NULL
 );
-
--- ----------------------------
--- Table structure for sqlite_sequence
--- ----------------------------
-DROP TABLE IF EXISTS "main"."sqlite_sequence";
-CREATE TABLE sqlite_sequence(name,seq);
