@@ -5,20 +5,16 @@ const path = require('path');
 const config = require('config');
 const router = require('express').Router();
 
-const db = require('../lib/db');
+const Media = require('../models/Media');
 const player = require('../lib/player');
+const mediaRoutes = require('./api/media');
+const alarmRoutes = require('./api/alarms');
 
+router.use('/media', mediaRoutes);
+router.use('/alarms', alarmRoutes);
 
 router.get('/test', (req, res) => {
   res.send('OK');
-});
-
-router.get('/media', (req, res) => {
-  db.getAllMedia()
-    .then(rows => {
-      res.successJson(rows);
-    })
-    .catch(err => res.errorJson(err));
 });
 
 router.get('/play/:fileName', (req, res) => {
@@ -28,7 +24,10 @@ router.get('/play/:fileName', (req, res) => {
 
   fs.stat(fileName, (err, stat) => {
     if(err == null) {
-      player.playMedia(fileName);
+      player.playMedia(new Media({
+        path: fileName,
+        name: fileName
+      }));
       res.successJson();
     } else if(err.code == 'ENOENT') {
       res.failMsg('File not found');

@@ -12,7 +12,6 @@ const apiRoutes = require('./routes/api');
 
 app.use('/api', apiRoutes);
 
-
 db.open(config.get('db.path'))
   .then(() => {
     logger.debug('Connected to DB successfully.');
