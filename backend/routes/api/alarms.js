@@ -23,7 +23,7 @@ router.post('/new', (req, res) => {
       res.successJson();
     })
     .catch(err => res.errorJson(err));
-  console.log(alarm.schedule());
+  alarm.schedule();
 });
 
 module.exports = router;

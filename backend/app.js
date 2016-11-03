@@ -7,6 +7,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
+const Alarm = require('./models/alarm');
 const db = require('./lib/db');
 const logger = require('./lib/logger');
 require('./lib/extend').extendResponse(express.response);
@@ -42,5 +43,13 @@ fs.statAsync(config.get('db.path'))
     app.listen(port, () => {
       logger.info(`App listening on port ${port}.`);
     });
+    logger.debug('Loading alarms from the database.');
+    return Alarm.getAll();
+  })
+  .then(alarms => {
+    return Promise.all(alarms.map(a => a.schedule()));
+  })
+  .then(() => {
+    logger.info('Done loading all alarms.');
   })
   .catch(logger.error);

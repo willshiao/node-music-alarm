@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../lib/db');
+const logger = require('../lib/logger');
 const scheduler = require('node-schedule');
 const Media = require('./Media');
 const player = require('../lib/player');
@@ -15,11 +16,12 @@ class Alarm {
 
   save() {
     return db.run('INSERT INTO `alarms` (rule, name) VALUES (?,?)', [
-      this.name, this.rule
+      this.rule, this.name
     ]);
   }
 
   schedule() {
+    logger.debug(`Scheduling ${this.name} with rule ${this.rule}`);
     return scheduler.scheduleJob(this.rule, () => {
       Media.getRandom()
         .then(media => {
@@ -29,7 +31,7 @@ class Alarm {
   }
 
   static getAll() {
-    return db.all('SELECT * FROM `alarms`')
+    return db.all('SELECT * FROM `alarms` WHERE enabled=1')
       .then(alarms => Promise.resolve(alarms.map(a => new Alarm(a))));
   }
 }
