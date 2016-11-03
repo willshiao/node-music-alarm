@@ -5,6 +5,12 @@
     "es6": true,
     "mocha": true
   },
+  "plugins": [
+    "vue"
+  ],
+  "parserOptions": {
+    "sourceType": "module"
+  },
   "rules": {
     "comma-dangle": [
       2,
