@@ -17,11 +17,11 @@ class Media {
   }
 
   static getById(id) {
-    return db.get('SELECT * FROM `media` WHERE id=?', id);
+    return new Media(db.get('SELECT * FROM `media` WHERE id=?', id));
   }
 
   static getRandom() {
-    return db.get('SELECT * FROM `media` ORDER BY RANDOM() LIMIT 1');
+    return new Media(db.get('SELECT * FROM `media` ORDER BY RANDOM() LIMIT 1'));
     //bad performance on large tables, but shouldn't be a problem
     //  since the app will probably have relatively few rows
   }

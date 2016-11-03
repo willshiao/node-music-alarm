@@ -39,6 +39,10 @@ router.get('/play/:fileName', (req, res) => {
   });
 });
 
+router.get('/playing', (req, res) => {
+  return res.successJson({playing: player.openNow === null});
+});
+
 router.get('/stop', (req, res) => {
   if(player.stopMedia()) return res.successJson();
   return res.failJson('No media playing');

@@ -1,6 +1,9 @@
 'use strict';
 
 const db = require('../lib/db');
+const scheduler = require('node-schedule');
+const Media = require('./Media');
+const player = require('../lib/player');
 
 class Alarm {
   constructor(data) {
@@ -16,8 +19,18 @@ class Alarm {
     ]);
   }
 
+  schedule() {
+    return scheduler.scheduleJob(this.rule, () => {
+      Media.getRandom()
+        .then(media => {
+          player.playMedia(media);
+        });
+    });
+  }
+
   static getAll() {
-    return db.all('SELECT * FROM `alarms`');
+    return db.all('SELECT * FROM `alarms`')
+      .then(alarms => Promise.resolve(alarms.map(a => new Alarm(a))));
   }
 }
 
