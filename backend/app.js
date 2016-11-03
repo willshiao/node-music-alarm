@@ -6,6 +6,7 @@ const app = express();
 
 const db = require('./lib/db');
 const logger = require('./lib/logger');
+require('./lib/extend').extendResponse(express.response);
 
 const apiRoutes = require('./routes/api');
 
