@@ -14,18 +14,25 @@ const apiRoutes = require('./routes/api');
 
 app.use('/api', apiRoutes);
 
-db.open(config.get('db.path'))
-  .then(() => {
-    logger.debug('Connected to DB successfully.');
-    return fs.statAsync(config.get('db.path'));
-  })
+let createTables = false;
+
+fs.statAsync(config.get('db.path'))
   .catch(err => {
     if(err.code === 'ENOENT') {
-      logger.debug('DB not found, creating tables.');
-      return db.createTables();
+      logger.debug('DB not found, going to create tables.');
+      createTables = true;
     } else {
       logger.error('Error: ', err);
     }
+  })
+  .then(() => {
+    return db.open(config.get('db.path'));
+  })
+  .then(() => {
+    logger.debug('Connected to DB successfully.');
+    if(!createTables) return Promise.resolve();
+    logger.debug('Creating tables...');
+    return db.createTables();
   })
   .then(() => {
     const port = process.env.PORT || config.get('port');
