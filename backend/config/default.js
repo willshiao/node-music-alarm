@@ -4,7 +4,8 @@ module.exports =
 {
   port: 3000,
   db: {
-    path: './files/alarm.db'
+    path: './files/alarm.db',
+    schema: './files/schema.sql'
   },
   media: {
     'dir': './files/media',
