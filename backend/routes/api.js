@@ -28,7 +28,7 @@ router.get('/play/:fileName', (req, res) => {
 
   fs.stat(fileName, (err, stat) => {
     if(err == null) {
-      player.playMedia();
+      player.playMedia(fileName);
       res.successJson();
     } else if(err.code == 'ENOENT') {
       res.failMsg('File not found');
@@ -39,7 +39,8 @@ router.get('/play/:fileName', (req, res) => {
 });
 
 router.get('/stop', (req, res) => {
-  res.json({ success: player.stopMedia() });
+  if(player.stopMedia()) return res.successJson();
+  return res.failJson('No media playing');
 });
 
 
