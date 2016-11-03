@@ -7,7 +7,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-const Alarm = require('./models/alarm');
+const Alarm = require('./models/Alarm');
 const db = require('./lib/db');
 const logger = require('./lib/logger');
 require('./lib/extend').extendResponse(express.response);
