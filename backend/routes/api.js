@@ -49,7 +49,7 @@ router.get('/play/:fileName', (req, res) => {
 });
 
 router.get('/playing', (req, res) => {
-  return res.successJson({playing: player.openNow === null});
+  return res.successJson({ playing: player.openMedia || false });
 });
 
 router.get('/stop', (req, res) => {
