@@ -3,21 +3,22 @@
 const Omx = require('node-omxplayer');
 const logger = require('./logger');
 
-let openPlayer = module.exports.openPlayer = null; //Currently open player (if any)
-let openMedia = module.exports.openMedia = null;
+const me = module.exports;
+me.openPlayer = null; //Currently open player (if any)
+me.openMedia = null;
 
 
-module.exports.playMedia = function(media) {
-  if(openPlayer !== null) logger.warn('Player instance already open.');
+me.playMedia = function(media) {
+  if(me.openPlayer !== null) logger.warn('Player instance already open.');
 
   logger.debug('Playing: ', media.name);
   const player = Omx(media.path);
-  openPlayer = player;
-  openMedia = media;
+  me.openPlayer = player;
+  me.openMedia = media;
 
   player.on('close', () => {
-    openPlayer = null;
-    openMedia = null;
+    me.openPlayer = null;
+    me.openMedia = null;
     logger.debug('Done playing: ', media.name);
   });
 
@@ -28,12 +29,12 @@ module.exports.playMedia = function(media) {
   return player;
 };
 
-module.exports.stopMedia = function() {
-  if(openPlayer === null || openMedia === null) {
+me.stopMedia = function() {
+  if(me.openPlayer === null || me.openMedia === null) {
     logger.warn('Can\'t stop playing - no media open');
     return false;
   }
-  openPlayer.quit();
+  me.openPlayer.quit();
   logger.debug('Player successfully quit');
   return true;
 };
@@ -48,8 +49,8 @@ process.on('uncaughtException', err => {
 //Close the player if open
 function cleanUp(code) {
   if(code === undefined) code = 0;
-  if(openPlayer !== null) {
-    openPlayer.quit();
+  if(me.openPlayer !== null) {
+    me.openPlayer.quit();
     logger.debug('Shutting down open omxplayer instance');
   }
   process.exit(code);
