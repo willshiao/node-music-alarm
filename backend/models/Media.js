@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const config = require('config');
 const Promise = require('bluebird');
 const db = require('../lib/db');
 
@@ -40,7 +41,7 @@ class Media {
 }
 
 function filterPath(pathStr) { //Prevent directory tranversals
-  return path.normalize(pathStr).replace(/^(\.\.[\/\\])+/, '');
+  return path.normalize(path.join(config.get('media.dir'), pathStr)).replace(/^(\.\.[\/\\])+/, '');
 }
 
 module.exports = Media;

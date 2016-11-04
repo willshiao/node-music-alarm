@@ -1,8 +1,6 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
-const config = require('config');
 const router = require('express').Router();
 const bodyParser = require('body-parser');
 
@@ -35,7 +33,7 @@ router.get('/play/:fileName', (req, res) => {
   if(!fileName) return res.failMsg('Invalid parameters');
   const media = new Media({
     name: fileName,
-    path: path.join(config.get('media.dir'), fileName),
+    path: fileName,
   });
 
   fs.stat(media.path, (err, stat) => {
