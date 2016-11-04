@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+const config = require('config');
 const router = require('express').Router();
 const Media = require('../../models/Media');
 
@@ -28,6 +30,7 @@ router.post('/new', (req, res) => {
     const media = req.body.media
       .map(m => {
         if(!m || !m.path || !m.name) return null;
+        m.path = addMediaPath(m.path);
         return new Media(m).save();
       })
       .filter(m => m !== null);
@@ -43,7 +46,7 @@ router.post('/new', (req, res) => {
     return res.failMsg('Missing one or more arguments');
 
   new Media({
-    path: req.body.path,
+    path: addMediaPath(req.body.path),
     name: req.body.name,
   }).save()
     .then(() => {
@@ -59,5 +62,9 @@ router.get('/random', (req, res) => {
     })
     .catch(err => res.errorJson(err));
 });
+
+function addMediaPath(pathStr) {
+  return path.join(config.get('media.dir'), pathStr);
+}
 
 module.exports = router;
