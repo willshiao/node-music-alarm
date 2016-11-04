@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 
 const Media = require('../models/Media');
 const player = require('../lib/player');
+const logger = require('../lib/logger');
 const mediaRoutes = require('./api/media');
 const alarmRoutes = require('./api/alarms');
 
@@ -17,6 +18,16 @@ router.use(bodyParser.json());
 
 router.get('/test', (req, res) => {
   res.send('OK');
+});
+
+router.get('/play/random', (req, res) => {
+  Media.getRandom()
+    .then(media => {
+      logger.debug('Playing random media: ', media);
+      player.playMedia(media);
+      res.successJson({playing: media});
+    })
+    .catch(err => res.errorJson(err));
 });
 
 router.get('/play/:fileName', (req, res) => {
