@@ -38,6 +38,10 @@ class Media {
         );
       });
   }
+
+  static deleteAll() {
+    return db.run('DELETE FROM `media`');
+  }
 }
 
 function filterPath(pathStr) { //Prevent directory tranversals

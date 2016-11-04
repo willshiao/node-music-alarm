@@ -11,6 +11,14 @@ router.get('/', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
+router.get('/clear', (req, res) => {
+  Media.deleteAll()
+    .then(() => {
+      res.successJson();
+    })
+    .catch(err => res.errorJson(err));
+});
+
 router.post('/new', (req, res) => {
   if(!req.body)
     return res.failMsg('No arguments found');
