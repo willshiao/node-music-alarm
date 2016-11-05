@@ -3,6 +3,7 @@
 const path = require('path');
 const config = require('config');
 const router = require('express').Router();
+const player = require('../lib/player');
 const Media = require('../../models/Media');
 
 router.get('/', (req, res) => {
@@ -62,6 +63,22 @@ router.delete('/:id', (req, res) => {
   Media.getById(id)
     .then(item => {
       res.successJson(item);
+    })
+    .catch(err => res.errorJson(err));
+});
+
+router.get('/play/:id', (req, res) => {
+  if(!req.params.id || isNaN(parseInt(req.params.id)))
+    return res.failMsg('Invalid ID');
+  const id = parseInt(req.params.id);
+  Media.getById(id)
+    .then(media => {
+      if(!media) {
+        res.failJson('No media with that ID found');
+      } else {
+        player.playMedia(media);
+        res.successJson({ playing: media });
+      }
     })
     .catch(err => res.errorJson(err));
 });
