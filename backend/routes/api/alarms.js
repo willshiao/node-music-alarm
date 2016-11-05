@@ -18,9 +18,7 @@ router.post([ '/', '/new' ], (req, res) => {
     rule: req.body.rule,
   });
   alarm.save()
-    .then(() => {
-      res.successJson();
-    })
+    .then(() => res.successJson())
     .catch(err => res.errorJson(err));
   alarm.schedule();
 });
@@ -30,9 +28,7 @@ router.delete('/:id', (req, res) => {
     return res.failMsg('Invalid ID');
   const id = parseInt(req.params.id);
   Alarm.getById(id)
-    .then(item => {
-      res.successJson(item);
-    })
+    .then(item => res.successJson(item))
     .catch(err => res.errorJson(err));
 });
 

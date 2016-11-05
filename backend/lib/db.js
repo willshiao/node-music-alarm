@@ -7,9 +7,7 @@ const config = require('config');
 
 db.createTables = function() {
   return fs.readFileAsync(config.get('db.schema'), 'utf8')
-    .then(data => {
-      return db.exec(data);
-    });
+    .then(data => db.exec(data));
 };
 
 module.exports = db;
