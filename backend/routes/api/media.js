@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
-router.get('/clear', (req, res) => {
+router.delete('/all', (req, res) => {
   Media.deleteAll()
     .then(() => {
       res.successJson();
@@ -21,7 +21,7 @@ router.get('/clear', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
-router.post('/new', (req, res) => {
+router.post(['/', '/new'], (req, res) => {
   if(!req.body)
     return res.failMsg('No arguments found');
   if(req.body.media && req.body.media.constructor === Array
@@ -51,6 +51,17 @@ router.post('/new', (req, res) => {
   }).save()
     .then(() => {
       res.successJson();
+    })
+    .catch(err => res.errorJson(err));
+});
+
+router.delete('/:id', (req, res) => {
+  if(!req.params.id || isNaN(parseInt(req.params.id)))
+    return res.failMsg('Invalid ID');
+  const id = parseInt(req.params.id);
+  Media.getById(id)
+    .then(item => {
+      res.successJson(item);
     })
     .catch(err => res.errorJson(err));
 });
