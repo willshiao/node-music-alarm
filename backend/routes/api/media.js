@@ -3,7 +3,7 @@
 const path = require('path');
 const config = require('config');
 const router = require('express').Router();
-const player = require('../lib/player');
+const player = require('../../lib/player');
 const Media = require('../../models/Media');
 
 router.get('/', (req, res) => {
