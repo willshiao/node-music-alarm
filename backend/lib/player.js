@@ -6,6 +6,7 @@ const logger = require('./logger');
 const me = module.exports;
 me.openPlayer = null; //Currently open player (if any)
 me.openMedia = null;
+me.stopped = false;
 
 
 me.playMedia = function(media) {
@@ -15,6 +16,7 @@ me.playMedia = function(media) {
   const player = Omx(media.path);
   me.openPlayer = player;
   me.openMedia = media;
+  me.stopped = false;
 
   player.on('close', () => {
     me.openPlayer = null;
@@ -35,6 +37,7 @@ me.stopMedia = function() {
     return false;
   }
   me.openPlayer.quit();
+  me.stopped = true;
   logger.debug('Player successfully quit');
   return true;
 };

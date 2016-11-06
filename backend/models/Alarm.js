@@ -23,10 +23,16 @@ class Alarm {
   schedule() {
     logger.debug(`Scheduling ${this.name} with rule ${this.rule}`);
     return scheduler.scheduleJob(this.rule, () => {
-      Media.getRandom()
-        .then(media => {
-          player.playMedia(media);
-        });
+      const playRandom = () => {
+        Media.getRandom()
+          .then(media => {
+            const p = player.playMedia(media);
+            p.on('close', () => {
+              if(!player.stopped) setTimeout(playRandom, 1000);
+            });
+          });
+      };
+      playRandom();
     });
   }
 
