@@ -23,6 +23,12 @@ router.post([ '/', '/new' ], (req, res) => {
   alarm.schedule();
 });
 
+router.delete('/all', (req, res) => {
+  Alarm.deleteAll()
+    .then(() => res.successJson())
+    .catch(err => res.errorJson(err));
+});
+
 router.delete('/:id', (req, res) => {
   if(!req.params.id || isNaN(parseInt(req.params.id)))
     return res.failMsg('Invalid ID');
@@ -32,10 +38,5 @@ router.delete('/:id', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
-router.delete('/all', (req, res) => {
-  Alarm.deleteAll()
-    .then(() => res.successJson())
-    .catch(err => res.errorJson(err));
-});
 
 module.exports = router;
