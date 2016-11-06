@@ -5,7 +5,6 @@ const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 
 const Alarm = require('./models/Alarm');
 const db = require('./lib/db');
@@ -14,9 +13,7 @@ require('./lib/extend').extendResponse(express.response);
 
 const apiRoutes = require('./routes/api');
 
-app.use(bodyParser.json());
 app.use('/api', apiRoutes);
-
 
 let createTables = false;
 

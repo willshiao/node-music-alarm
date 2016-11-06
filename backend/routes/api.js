@@ -3,6 +3,7 @@
 const fs = require('fs');
 const router = require('express').Router();
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const Media = require('../models/Media');
 const player = require('../lib/player');
@@ -10,9 +11,11 @@ const logger = require('../lib/logger');
 const mediaRoutes = require('./api/media');
 const alarmRoutes = require('./api/alarms');
 
+router.use(cors());
+router.use(bodyParser.json());
+
 router.use('/media', mediaRoutes);
 router.use('/alarms', alarmRoutes);
-router.use(bodyParser.json());
 
 router.get('/test', (req, res) => {
   res.send('OK');
