@@ -60,9 +60,9 @@ router.delete('/:id', (req, res) => {
   if(!req.params.id || isNaN(parseInt(req.params.id)))
     return res.failMsg('Invalid ID');
   const id = parseInt(req.params.id);
-  Media.getById(id)
-    .then(item => {
-      res.successJson(item);
+  Media.deleteById(id)
+    .then(() => {
+      res.successJson();
     })
     .catch(err => res.errorJson(err));
 });

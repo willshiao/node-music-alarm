@@ -41,6 +41,10 @@ class Media {
   static deleteAll() {
     return db.run('DELETE FROM `media`');
   }
+
+  static deleteById(id) {
+    return db.run('DELETE FROM `media` WHERE id=?', id);
+  }
 }
 
 function filterPath(pathStr) { //Prevent directory tranversals
