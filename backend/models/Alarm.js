@@ -39,6 +39,14 @@ class Alarm {
     return db.get('SELECT * FROM `alarms` WHERE id=? AND enabled=1', id)
       .then(alarm => Promise.resolve(new Alarm(alarm)));
   }
+
+  static deleteById(id) {
+    return db.run('DELETE FROM `alarms` WHERE id=?', id);
+  }
+
+  static deleteAll() {
+    return db.run('DELETE FROM `alarms`');
+  }
 }
 
 module.exports = Alarm;
