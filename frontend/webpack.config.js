@@ -32,7 +32,8 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
-      }
+      },
+      { test: /\.jsx?$/, loader: 'babel' }
     ]
   },
   resolve: {
