@@ -57,7 +57,7 @@ router.get('/playing', (req, res) => {
 
 router.get('/stop', (req, res) => {
   if(player.stopMedia()) return res.successJson();
-  return res.failJson('No media playing');
+  return res.failMsg('No media playing');
 });
 
 module.exports = router;
