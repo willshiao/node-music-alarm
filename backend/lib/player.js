@@ -10,7 +10,11 @@ me.stopped = false;
 
 
 me.playMedia = function(media) {
-  if(me.openPlayer !== null) logger.warn('Player instance already open.');
+  if(me.openPlayer !== null) {
+    logger.warn('Player instance already open, closing current player.');
+    me.stopped = true;
+    me.openPlayer.quit();
+  }
 
   logger.debug('Playing: ', media.name);
   const player = Omx(media.path);
