@@ -91,6 +91,16 @@ router.get('/random', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
+router.get('/random/:limit', (req, res) => {
+  if(!req.params.limit || isNaN(parseInt(req.params.limit)))
+    return res.errorJson('Invalid limit');
+
+  const limit = parseInt(req.params.limit);
+  Media.getRandomLimit(limit)
+    .then(media => res.successJson(media))
+    .catch(err => res.errorJson(err));
+});
+
 function addMediaPath(pathStr) {
   return path.join(config.get('media.dir'), pathStr);
 }

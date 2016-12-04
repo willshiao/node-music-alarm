@@ -38,5 +38,4 @@ router.delete('/:id', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
-
 module.exports = router;

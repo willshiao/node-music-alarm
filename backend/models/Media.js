@@ -22,6 +22,13 @@ class Media {
       .then(m => Promise.resolve(new Media(m)));
   }
 
+  static getRandomLimit(max) {
+    const query = `SELECT * FROM media WHERE id IN (
+      SELECT id FROM media ORDER BY RANDOM() LIMIT ?)`;
+    return db.all(query, max)
+      .then(media => Promise.resolve(media.map(m => new Media(m))));
+  }
+
   static getRandom() {
     return db.get('SELECT * FROM `media` ORDER BY RANDOM() LIMIT 1')
       .then(m => Promise.resolve(new Media(m)));
