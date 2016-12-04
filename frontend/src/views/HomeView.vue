@@ -1,11 +1,16 @@
 <template>
   <div class="container">
-    <h1>Home</h1>
+  <alarm-status></alarm-status>
   </div>
 </template>
 
 <script>
+import {AlarmStatus} from '../components';
+
 export default {
-  name: 'HomeView'
+  name: 'HomeView',
+  components: {
+    'alarm-status': AlarmStatus
+  }
 };
 </script>
