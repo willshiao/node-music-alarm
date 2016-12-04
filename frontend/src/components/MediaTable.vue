@@ -13,45 +13,41 @@ export default {
     const el = this;
     return {
       columns: ['id', 'name', 'path', 'delete'],
-      tableData: [
-        {id: 1, name: 'test', path: 'test/path'}
-      ],
+      tableData: [],
       loaded: false,
       options: {
         headings: { id: 'ID' },
         templates: {
-          delete: function(h, row) {
+          delete(h, row) {
             return h('delete-btn', {
               props: {
                 id: row.id,
-                type: 'media'
+                type: 'media',
               },
-              on: {
-                'deleted': el.clearRow,
-              }
+              on: { deleted: el.clearRow },
             });
-          }
+          },
         },
-        pagination:  {
-          dropdown: true
-        }
-      }
+        pagination: {
+          dropdown: true,
+        },
+      },
     };
   },
-  mounted: function() {
+  mounted() {
     axios.get('//localhost:3000/api/media')
-      .then(res => {
+      .then((res) => {
         const data = res.data;
-        if(data.status != 'success') return console.error(data);
+        if(data.status !== 'success') throw (data);
         this.tableData = data.data;
         this.loaded = true;
       })
       .catch(console.error);
   },
   methods: {
-    clearRow: function(id) {
-      this.tableData = this.tableData.filter(row => row.id != id);
-    }
+    clearRow(id) {
+      this.tableData = this.tableData.filter(row => row.id !== id);
+    },
   },
 };
 </script>

@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import {AlarmTable} from '../components';
+import { AlarmTable } from '../components';
 
 export default {
   name: 'AlarmsView',
   components: {
-    'alarm-table': AlarmTable
-  }
+    'alarm-table': AlarmTable,
+  },
 };
 </script>

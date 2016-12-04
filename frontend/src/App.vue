@@ -11,8 +11,8 @@ import { Navbar } from './components';
 export default {
   name: 'app',
   components: {
-    navbar: Navbar
-  }
+    navbar: Navbar,
+  },
 };
 </script>
 

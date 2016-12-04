@@ -27,14 +27,14 @@ export default {
   },
   computed: {
   },
-  mounted: function() {
+  mounted() {
     axios.get(`//localhost:3000/api/media/random/${numMedia}`)
-      .then(res => {
+      .then((res) => {
         if(res.data.status === 'success') {
           this.media = res.data.data;
         }
       });
-  }
+  },
 };
 </script>
 

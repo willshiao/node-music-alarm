@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import {AlarmStatus} from '../components';
+import { AlarmStatus } from '../components';
 
 export default {
   name: 'HomeView',
   components: {
-    'alarm-status': AlarmStatus
-  }
+    'alarm-status': AlarmStatus,
+  },
 };
 </script>

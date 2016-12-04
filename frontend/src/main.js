@@ -1,4 +1,4 @@
-import 'bootstrap/dist/js/bootstrap.js';
+import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import Vue from 'vue';
@@ -12,6 +12,5 @@ Vue.component('delete-btn', DeleteBtn);
 new Vue({
   router,
   el: '#app',
-  render: h => h(App)
+  render: h => h(App),
 });
-

@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import {MediaTable} from '../components';
+import { MediaTable } from '../components';
 
 export default {
   name: 'MediaView',
   components: {
-    'media-table': MediaTable
-  }
+    'media-table': MediaTable,
+  },
 };
 </script>

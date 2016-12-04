@@ -21,25 +21,25 @@ export default {
     return {
       currentlyPlaying: false,
       timeoutId: null,
-      lastUpdatedDate: null
+      lastUpdatedDate: null,
     };
   },
   computed: {
-    statusText: function() {
+    statusText() {
       return this.currentlyPlaying ?
         'Playing' :
         'Not Playing';
     },
-    lastUpdatedText: function() {
+    lastUpdatedText() {
       return (this.lastUpdatedDate === null) ?
         'None' :
         this.lastUpdatedDate.toLocaleTimeString();
-    }
+    },
   },
   methods: {
-    updateStatus: function() {
+    updateStatus() {
       axios.get('//localhost:3000/api/playing')
-        .then(res => {
+        .then((res) => {
           if(res.data.status === 'success') {
             this.currentlyPlaying = res.data.data.playing;
             this.lastUpdatedDate = new Date();
@@ -47,17 +47,17 @@ export default {
           }
         });
     },
-    cancelUpdates: function() {
+    cancelUpdates() {
       if(this.timeoutId !== null) {
         clearTimeout(this.timeoutId);  // Cancel periodic updating
       }
     },
   },
-  mounted: function() {
+  mounted() {
     this.updateStatus();
   },
-  destroyed: function() {
+  destroyed() {
     this.cancelUpdates();
-  }
+  },
 };
 </script>

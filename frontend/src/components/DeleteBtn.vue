@@ -9,15 +9,15 @@ export default {
   name: 'DeleteMediaBtn',
   props: ['id', 'type'],
   methods: {
-    sendRequest: function(evt) {
+    sendRequest() {
       axios.delete(`//localhost:3000/api/${this.type}/${this.id}`)
-        .then(res => {
+        .then((res) => {
           if(res.data.status === 'success') {
             console.log('Deleted successfully');
             this.$emit('deleted', this.id);
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>
