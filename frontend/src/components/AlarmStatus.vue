@@ -4,8 +4,8 @@
     <p class="lead">Last Update: {{lastUpdatedText}}</p>
     <hr class="my-2">
     <p class="lead">
-      <a class="btn btn-primary btn-lg" href="" role="button"
-        v-bind:class="{ disabled: !currentlyPlaying }">Guess Song</a>
+      <router-link class="btn btn-primary btn-lg" to="/quiz" role="button"
+        v-bind:class="{ disabled: !currentlyPlaying }">Guess Song</router-link>
     </p>
   </div>
 </template>

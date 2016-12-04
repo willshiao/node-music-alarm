@@ -5,7 +5,7 @@ import VueTables from 'vue-tables-2';
 Vue.use(Router);
 Vue.use(VueTables.client);
 
-import {HomeView, MediaView, AlarmsView} from '../views';
+import {HomeView, MediaView, AlarmsView, QuizView} from '../views';
 
 export default new Router({
   mode: 'history',
@@ -14,6 +14,7 @@ export default new Router({
     { path: '/home', component: HomeView },
     { path: '/media', component: MediaView },
     { path: '/alarms', component: AlarmsView },
+    { path: '/quiz', component: QuizView },
     { path: '*', redirect: '/home' }
   ]
 });
