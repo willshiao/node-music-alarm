@@ -10,9 +10,10 @@ router.get('/', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
-router.post([ '/', '/new' ], (req, res) => {
-  if(!req.body || !req.body.rule || !req.body.name)
+router.post(['/', '/new'], (req, res) => {
+  if(!req.body || !req.body.rule || !req.body.name) {
     return res.failMsg('Missing one or more form fields');
+  }
   const alarm = new Alarm({
     name: req.body.name,
     rule: req.body.rule,
@@ -30,9 +31,10 @@ router.delete('/all', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  if(!req.params.id || isNaN(parseInt(req.params.id)))
+  if(!req.params.id || isNaN(parseInt(req.params.id, 10))) {
     return res.failMsg('Invalid ID');
-  const id = parseInt(req.params.id);
+  }
+  const id = parseInt(req.params.id, 10);
   Alarm.deleteById(id)
     .then(() => res.successJson())
     .catch(err => res.errorJson(err));

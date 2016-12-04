@@ -4,14 +4,15 @@ module.exports = {
     es6: true,
     mocha: true
   },
+  extends: 'airbnb-base',
   parserOptions: {
     ecmaVersion: 6,
     sourceType: 'script',
     "impliedStrict": false
   },
-  extends: 'airbnb-base',
   rules: {
     'no-console': 0,
+    'consistent-return': 0,
     'keyword-spacing': ['error', {'overrides': {
       'if': {'after': false},
       'for': {'after': false},

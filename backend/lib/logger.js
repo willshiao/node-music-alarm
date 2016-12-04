@@ -9,8 +9,7 @@ logger.add(logger.transports.Console, {
   prettyPrint: true,
   colorize: true,
   silent: false,
-  timestamp: false
+  timestamp: false,
 });
-
 
 module.exports = logger;

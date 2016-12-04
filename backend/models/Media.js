@@ -8,12 +8,12 @@ class Media {
   constructor(data) {
     if(data.id) this.id = data.id;
     this.name = data.name;
-    this.path = filterPath(data.path);
+    this.path = Media.filterPath(data.path);
   }
 
   save() {
     return db.run('INSERT INTO `media` (name, path) VALUES (?, ?)', [
-      this.name, this.path
+      this.name, this.path,
     ]);
   }
 
@@ -32,17 +32,14 @@ class Media {
   static getRandom() {
     return db.get('SELECT * FROM `media` ORDER BY RANDOM() LIMIT 1')
       .then(m => Promise.resolve(new Media(m)));
-    //bad performance on large tables, but shouldn't be a problem
-    //  since the app will probably have relatively few rows
+    // bad performance on large tables, but shouldn't be a problem
+    //   since the app will probably have relatively few rows
   }
 
   static getAll() {
     return db.all('SELECT * FROM `media`')
-      .then(items => {
-        return Promise.resolve(items
-          .map(a => new Media(a))
-        );
-      });
+      .then(items =>
+        Promise.resolve(items.map(a => new Media(a))));
   }
 
   static deleteAll() {
@@ -52,10 +49,10 @@ class Media {
   static deleteById(id) {
     return db.run('DELETE FROM `media` WHERE id=?', id);
   }
-}
 
-function filterPath(pathStr) { //Prevent directory tranversals
-  return path.normalize(pathStr).replace(/^(\.\.[\/\\])+/, '');
+  static filterPath(pathStr) {  // Prevent directory tranversals
+    return path.normalize(pathStr).replace(/^(\.\.[/\\])+/, '');
+  }
 }
 
 module.exports = Media;

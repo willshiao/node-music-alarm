@@ -16,7 +16,7 @@ class Alarm {
 
   save() {
     return db.run('INSERT INTO `alarms` (rule, name) VALUES (?,?)', [
-      this.rule, this.name
+      this.rule, this.name,
     ]);
   }
 
@@ -25,7 +25,7 @@ class Alarm {
     return scheduler.scheduleJob(this.rule, () => {
       const playRandom = () => {
         Media.getRandom()
-          .then(media => {
+          .then((media) => {
             const p = player.playMedia(media);
             p.on('close', () => {
               if(!player.stopped) setTimeout(playRandom, 1000);
@@ -36,9 +36,7 @@ class Alarm {
     });
   }
 
-  static getAll(onlyEnabled) {
-    if(onlyEnabled === undefined) onlyEnabled = false;
-
+  static getAll(onlyEnabled = false) {
     let query = 'SELECT * FROM `alarms`';
     if(onlyEnabled) query += ' WHERE enabled=1';
     return db.all(query)

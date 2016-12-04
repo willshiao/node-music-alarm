@@ -2,34 +2,33 @@
 
 const logger = require('../lib/logger');
 
-module.exports.extendResponse = function(response) {
-  response.successJson = function(data) {
-    if(data === undefined) data = {};
+module.exports.extendResponse = function extendResponse(response) {
+  response.successJson = function successJson(data = {}) {
     return this.json({
       status: 'success',
-      data: data
+      data,
     });
   };
 
-  response.errorJson = function(err) {
+  response.errorJson = function errorJson(err) {
     logger.error(err);
     return this.json({
       status: 'error',
-      error: err.message || err
+      error: err.message || err,
     });
   };
 
-  response.failMsg = function(msg) {
+  response.failMsg = function failMsg(msg) {
     return this.json({
       status: 'fail',
-      message: msg
+      message: msg,
     });
   };
 
-  response.errorMsg = function(msg) {
+  response.errorMsg = function errorMsg(msg) {
     return this.json({
       status: 'error',
-      message: msg
+      message: msg,
     });
   };
 };
