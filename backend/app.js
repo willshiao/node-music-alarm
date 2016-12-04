@@ -41,7 +41,7 @@ fs.statAsync(config.get('db.path'))
       logger.info(`App listening on port ${port}.`);
     });
     logger.debug('Loading alarms from the database.');
-    return Alarm.getAll();
+    return Alarm.getAll(true);  // Only get enabled alarms
   })
   .then(alarms => {
     return Promise.all(alarms.map(a => a.schedule()));

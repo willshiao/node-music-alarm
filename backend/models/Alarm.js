@@ -36,8 +36,12 @@ class Alarm {
     });
   }
 
-  static getAll() {
-    return db.all('SELECT * FROM `alarms` WHERE enabled=1')
+  static getAll(onlyEnabled) {
+    if(onlyEnabled === undefined) onlyEnabled = false;
+
+    let query = 'SELECT * FROM `alarms`';
+    if(onlyEnabled) query += ' WHERE enabled=1';
+    return db.all(query)
       .then(alarms => Promise.resolve(alarms.map(a => new Alarm(a))));
   }
 
