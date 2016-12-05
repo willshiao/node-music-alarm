@@ -12,19 +12,15 @@ export default {
   data() {
     const el = this;
     return {
-      columns: ['id', 'name', 'rule', 'statusText', 'toggleEnabled', 'delete'],
+      columns: ['id', 'name', 'rule', 'toggleEnabled', 'delete'],
       tableData: [],
       loaded: false,
       options: {
         headings: {
           id: 'ID',
-          toggleEnabled: 'Toggle Status',
-          statusText: 'Status',
+          toggleEnabled: 'Enabled',
         },
         templates: {
-          statusText(h, row) {
-            return row.enabled ? 'Enabled' : 'Disabled';
-          },
           delete(h, row) {
             return h('delete-btn', {
               props: {
@@ -35,11 +31,11 @@ export default {
             });
           },
           toggleEnabled(h, row) {
-            return h('toggle-enabled-btn', {
+            return h('status-checkbox', {
               props: {
                 id: row.id,
                 type: 'alarms',
-                isEnabled: row.enabled,
+                wasEnabled: row.enabled,
               },
               on: { toggled: el.toggleEnabled },
             });

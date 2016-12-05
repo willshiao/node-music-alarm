@@ -5,10 +5,10 @@ import Vue from 'vue';
 import App from './App.vue';
 
 import router from './router';
-import { DeleteBtn, ToggleEnabledBtn } from './components';
+import { DeleteBtn, StatusCheckbox } from './components';
 
 Vue.component('delete-btn', DeleteBtn);
-Vue.component('toggle-enabled-btn', ToggleEnabledBtn);
+Vue.component('status-checkbox', StatusCheckbox);
 
 new Vue({
   router,
