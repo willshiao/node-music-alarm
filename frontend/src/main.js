@@ -5,9 +5,10 @@ import Vue from 'vue';
 import App from './App.vue';
 
 import router from './router';
-import { DeleteBtn } from './components';
+import { DeleteBtn, ToggleEnabledBtn } from './components';
 
 Vue.component('delete-btn', DeleteBtn);
+Vue.component('toggle-enabled-btn', ToggleEnabledBtn);
 
 new Vue({
   router,
