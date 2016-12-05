@@ -3,6 +3,7 @@
 const Omx = require('node-omxplayer');
 const logger = require('./logger');
 const config = require('config');
+const Promise = require('bluebird');
 
 const me = module.exports;
 me.openPlayer = null;  // Currently open player (if any)
