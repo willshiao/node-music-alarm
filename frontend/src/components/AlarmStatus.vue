@@ -14,6 +14,7 @@
 import axios from 'axios';
 
 const POLLING_INTERVAL = 1000;
+const API_URL = '//localhost:3000/api';
 
 export default {
   name: 'AlarmStatus',
@@ -38,7 +39,7 @@ export default {
   },
   methods: {
     updateStatus() {
-      axios.get('//localhost:3000/api/playing')
+      axios.get(`${API_URL}/playing`)
         .then((res) => {
           if(res.data.status === 'success') {
             this.currentlyPlaying = res.data.data.playing;
