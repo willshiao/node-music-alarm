@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = '//localhost:3000/api';
+const API_URL = `//${window.location.hostname}:3000/api`;
 
 export default class Api {
   static getPlaying() {
