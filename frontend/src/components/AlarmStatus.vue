@@ -6,6 +6,10 @@
     <p class="lead">
       <router-link class="btn btn-primary btn-lg" to="/quiz" role="button"
         v-bind:class="{ disabled: !currentlyPlaying }">Guess Song</router-link>
+
+      <a class="btn btn-primary btn-lg" role="button" href="#"
+        v-bind:class="{ disabled: currentlyPlaying }" 
+        v-on:click="playRandom($event)">Play Song</a>
     </p>
   </div>
 </template>
@@ -44,6 +48,10 @@ export default {
           this.lastUpdatedDate = new Date();
           this.timeoutId = setTimeout(this.updateStatus, POLLING_INTERVAL);
         });
+    },
+    playRandom(evt) {
+      evt.preventDefault();
+      return Api.playRandom();
     },
     cancelUpdates() {
       if(this.timeoutId !== null) {
