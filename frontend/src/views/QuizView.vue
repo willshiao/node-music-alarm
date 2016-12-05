@@ -5,7 +5,7 @@
       <div class="card text-center">
         <div class="card-block">
           <h4 class="card-title">{{item.name}}</h4>
-          <a href="#" class="btn btn-primary" v-on:click="chooseMedia(item.id)">Choose</a>
+          <a href="#" class="btn btn-primary" v-on:click="chooseMedia(item.id, $event)">Choose</a>
         </div>
       </div>
     </div>
@@ -38,7 +38,8 @@ export default {
     this.refreshMedia();
   },
   methods: {
-    chooseMedia(id) {
+    chooseMedia(id, evt) {
+      evt.preventDefault();
       console.log('Chose: ', id);
       if(this.playing === null) {
         swal({
