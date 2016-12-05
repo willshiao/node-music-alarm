@@ -1,5 +1,5 @@
 <template>
-  <button class="btn" v-on:click="sendRequest" v-bind:class="{disabled: disabled}">Delete</button>
+  <button class="btn" v-on:click="sendRequest" v-bind:disabled="disabled">Delete</button>
 </template>
 
 <script>
