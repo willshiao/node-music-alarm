@@ -38,11 +38,11 @@ me.playMedia = function playMedia(media, cb) {
 
 me.stopMedia = function stopMedia(cb) {
   return new Promise((resolve) => {
-    me.openPlayer.quit();
     if(me.openPlayer === null || me.openMedia === null) {
-      logger.warn('Can\'t stop playing - no media open');
+      logger.debug('Can\'t stop playing - no media open');
       return resolve(false);
     }
+    me.openPlayer.quit();
     me.openPlayer.on('close', () => {
       me.stopped = true;
       logger.debug('Player successfully quit');
