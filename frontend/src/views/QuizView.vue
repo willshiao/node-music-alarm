@@ -25,6 +25,31 @@ function randomIndex(max) {
   return Math.floor(Math.random() * (Math.floor(max)));
 }
 
+function nothingPlayingMsg() {
+  swal({
+    title: 'Nothing Playing',
+    text: 'No song is playing right now.',
+    type: 'warning',
+  });
+}
+
+function incorrectMsg(playing) {
+  swal({
+    title: 'Incorrect',
+    text: `You guessed incorrectly. The song playing was ${playing.name}.
+           Starting another song.`,
+    type: 'error',
+  });
+}
+
+function correctMsg() {
+  swal({
+    title: 'Correct',
+    text: 'You guessed the song correctly! Stopping the song...',
+    type: 'success',
+  });
+}
+
 export default {
   name: 'QuizView',
   data() {
@@ -41,34 +66,28 @@ export default {
     chooseMedia(id, evt) {
       evt.preventDefault();
       console.log('Chose: ', id);
-      if(this.playing === null) {
-        swal({
-          title: 'Nothing Playing',
-          text: 'No song is playing right now.',
-          type: 'warning',
-        });
-        return;
-      }
-      if(id !== this.playing.id) {
-        swal({
-          title: 'Incorrect',
-          text: `You guessed incorrectly. The song playing was ${this.playing.name}.
-                 Starting another song.`,
-          type: 'error',
-        });
-        this.fillRandom()
-          .then(Api.playRandom)
-          .then((playing) => {
-            this.playing = playing;
-          });
-      } else {
-        swal({
-          title: 'Success',
-          text: 'You guessed correctly! Stopping the song...',
-          type: 'success',
-        });
+
+      if(this.playing === null) return nothingPlayingMsg();
+      if(id === this.playing.id) {
         Api.stopPlaying();
+        return correctMsg();
       }
+      return Api.getPlaying()
+        .then((playing) => {
+          if(this.playing === null) {
+            this.playing = null;
+            return nothingPlayingMsg();
+          } else if(id === playing.id) {
+            Api.stopPlaying();
+            return correctMsg();
+          }
+          incorrectMsg(playing);
+          return this.fillRandom()
+            .then(Api.playRandom)
+            .then((newPlaying) => {
+              this.playing = newPlaying;
+            });
+        });
     },
     refreshMedia() {
       return Api.getPlaying()
