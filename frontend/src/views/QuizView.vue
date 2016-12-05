@@ -74,7 +74,7 @@ export default {
       }
       return Api.getPlaying()
         .then((playing) => {
-          if(this.playing === null) {
+          if(playing === null) {
             this.playing = null;
             return nothingPlayingMsg();
           } else if(id === playing.id) {
