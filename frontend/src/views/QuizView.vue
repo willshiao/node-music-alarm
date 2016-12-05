@@ -17,10 +17,9 @@
 <script>
 import swal from 'sweetalert';
 import 'sweetalert/dist/sweetalert.css';
-import axios from 'axios';
+import Api from '../lib/api';
 
 const numMedia = 12;
-const API_URL = '//localhost:3000/api';
 
 function randomIndex(max) {
   return Math.floor(Math.random() * (Math.floor(max)));
@@ -57,46 +56,30 @@ export default {
           type: 'error',
         });
         this.fillRandom()
-          .then(this.changePlaying);
+          .then(Api.playRandom)
+          .then((playing) => {
+            this.playing = playing;
+          });
       } else {
         swal({
           title: 'Success',
           text: 'You guessed correctly! Stopping the song...',
           type: 'success',
         });
-        this.stopPlaying();
+        Api.stopPlaying();
       }
     },
     refreshMedia() {
-      return this.getPlaying()
-        .then(this.fillRandom);
-    },
-    getPlaying() {
-      return axios.get(`${API_URL}/playing`)
-        .then((res) => {
-          if(res.data.status !== 'success') throw new Error(res.data.message);
-          if(!res.data.data.playing) {
-            this.playing = null;
-          } else {
-            this.playing = res.data.data.playing;
-          }
-        });
-    },
-    stopPlaying() {
-      return axios.get(`${API_URL}/stop`);
-    },
-    changePlaying() {
-      return axios.get(`${API_URL}/play/random`)
-        .then((res) => {
-          if(res.data.status !== 'success') throw new Error(res.data.message);
-          this.playing = res.data.data.playing;
+      return Api.getPlaying()
+        .then((playing) => {
+          this.playing = playing;
+          return this.fillRandom();
         });
     },
     fillRandom() {
-      return axios.get(`${API_URL}/media/random/${numMedia}`)
-        .then((res) => {
-          if(res.data.status !== 'success') throw new Error(res.data.message);
-          this.media = res.data.data;
+      return Api.getRandom(numMedia)
+        .then((media) => {
+          this.media = media;
         });
     },
   },

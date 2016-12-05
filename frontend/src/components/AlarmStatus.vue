@@ -11,10 +11,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Api from '../lib/api';
 
 const POLLING_INTERVAL = 1000;
-const API_URL = '//localhost:3000/api';
 
 export default {
   name: 'AlarmStatus',
@@ -39,13 +38,11 @@ export default {
   },
   methods: {
     updateStatus() {
-      axios.get(`${API_URL}/playing`)
-        .then((res) => {
-          if(res.data.status === 'success') {
-            this.currentlyPlaying = res.data.data.playing;
-            this.lastUpdatedDate = new Date();
-            this.timeoutId = setTimeout(this.updateStatus, POLLING_INTERVAL);
-          }
+      return Api.getPlaying()
+        .then((playing) => {
+          this.currentlyPlaying = (playing !== null);
+          this.lastUpdatedDate = new Date();
+          this.timeoutId = setTimeout(this.updateStatus, POLLING_INTERVAL);
         });
     },
     cancelUpdates() {
