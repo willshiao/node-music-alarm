@@ -22,11 +22,14 @@ router.get('/test', (req, res) => {
 });
 
 router.get('/play/random', (req, res) => {
+  let current;
   Media.getRandom()
     .then((media) => {
       logger.debug('Playing random media: ', media);
-      player.playMedia(media);
-      res.successJson({ playing: media });
+      current = media;
+      return player.playMedia(current);
+    }).then(() => {
+      res.successJson({ playing: current });
     })
     .catch(err => res.errorJson(err));
 });
@@ -41,8 +44,8 @@ router.get('/play/:fileName', (req, res) => {
 
   fs.stat(media.path, (err) => {
     if(err == null) {
-      player.playMedia(media);
-      res.successJson();
+      player.playMedia(media)
+        .then(() => res.successJson());
     } else if(err.code === 'ENOENT') {
       res.failMsg('File not found');
     } else {
@@ -56,8 +59,11 @@ router.get('/playing', (req, res) => {
 });
 
 router.get('/stop', (req, res) => {
-  if(player.stopMedia()) return res.successJson();
-  return res.failMsg('No media playing');
+  player.stopMedia()
+    .then((status) => {
+      if(status) return res.successJson();
+      return res.failMsg('No media playing');
+    });
 });
 
 module.exports = router;
