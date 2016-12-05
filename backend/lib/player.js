@@ -12,15 +12,11 @@ me.stopped = false;
 
 
 me.playMedia = function playMedia(media, cb) {
-  if(me.openPlayer !== null) {
-    logger.warn('Player instance already open, closing current player.');
-    me.stopped = true;
-    me.openPlayer.quit();
-  }
-
-  return new Promise((resolve) => {
-    me.openPlayer.on('close', () => {
+  return me.stopMedia()
+    .then((status) => {
+      if(status) logger.debug('Stopped currently playing media.');
       logger.debug('Playing: ', media.name);
+
       const player = Omx(media.path, config.get('player.output'), config.get('player.loop'),
         config.get('player.initialVolume'));
       me.openPlayer = player;
@@ -36,9 +32,8 @@ me.playMedia = function playMedia(media, cb) {
       player.on('error', (err) => {
         logger.error('Error playing media: ', err);
       });
-      resolve(player);
-    });
-  }).asCallback(cb);
+      return Promise.resolve(player);
+    }).asCallback(cb);
 };
 
 me.stopMedia = function stopMedia(cb) {
