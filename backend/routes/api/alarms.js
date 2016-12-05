@@ -24,6 +24,19 @@ router.post(['/', '/new'], (req, res) => {
   alarm.schedule();
 });
 
+router.put('/:id', (req, res) => {
+  if(!req.params.id || isNaN(parseInt(req.params.id, 10))) {
+    return res.failMsg('Invalid ID');
+  }
+  if(!req.body || req.body === {}) {
+    return res.failMsg('Missing or invalid contents');
+  }
+  const id = parseInt(req.params.id, 10);
+  Alarm.updateById(id, req.body)
+    .then(() => res.successJson())
+    .catch(err => res.errorJson(err));
+});
+
 router.delete('/all', (req, res) => {
   Alarm.deleteAll()
     .then(() => res.successJson())

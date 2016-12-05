@@ -11,7 +11,7 @@ class Alarm {
     if(data.id) this.id = data.id;
     this.rule = data.rule;
     this.name = data.name;
-    this.enabled = (data.enabled === undefined) ? true : data.enabled;
+    this.enabled = (data.enabled === undefined) ? true : (data.enabled === 1);
   }
 
   save() {
@@ -46,6 +46,28 @@ class Alarm {
   static getById(id) {
     return db.get('SELECT * FROM `alarms` WHERE id=? AND enabled=1', id)
       .then(alarm => Promise.resolve(new Alarm(alarm)));
+  }
+
+  static updateById(id, newObject = {}) {
+    const updates = [];
+    const params = [];
+
+    if('rule' in newObject) {
+      updates.push('rule=?');
+      params.push(newObject.rule);
+    }
+    if('name' in newObject) {
+      updates.push('name=?');
+      params.push(newObject.name);
+    }
+    if('enabled' in newObject) {
+      updates.push('enabled=?');
+      params.push(newObject.enabled ? 1 : 0);
+    }
+    if(updates.length === 0) return Promise.resolve();  // Nothing to do
+    params.push(id);
+    const updateText = updates.join(',');
+    return db.run(`UPDATE alarms SET ${updateText} WHERE id=?`, params);
   }
 
   static deleteById(id) {
