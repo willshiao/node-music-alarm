@@ -2,6 +2,7 @@
 
 const Omx = require('node-omxplayer');
 const logger = require('./logger');
+const config = require('config');
 
 const me = module.exports;
 me.openPlayer = null;  // Currently open player (if any)
@@ -17,7 +18,8 @@ me.playMedia = function playMedia(media) {
   }
 
   logger.debug('Playing: ', media.name);
-  const player = Omx(media.path);
+  const player = Omx(media.path, config.get('player.output'), config.get('player.loop'),
+    config.get('player.initialVolume'));
   me.openPlayer = player;
   me.openMedia = media;
   me.stopped = false;
