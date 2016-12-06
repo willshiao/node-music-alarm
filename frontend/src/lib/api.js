@@ -7,6 +7,22 @@ export default class Api {
     return API_URL;
   }
 
+  static getMedia() {
+    axios.get(`${API_URL}/media`)
+      .then((res) => {
+        if(res.data.status !== 'success') return Promise.reject(res.data.message);
+        return Promise.resolve(res.data.data);
+      });
+  }
+
+  static getAlarms() {
+    axios.get(`${API_URL}/alarms`)
+      .then((res) => {
+        if(res.data.status !== 'success') return Promise.reject(res.data.message);
+        return Promise.resolve(res.data.data);
+      });
+  }
+
   static getPlaying() {
     return axios.get(`${API_URL}/playing`)
       .then((res) => {

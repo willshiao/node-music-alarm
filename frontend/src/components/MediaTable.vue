@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Api from '../lib/api';
 
 export default {
   name: 'MediaTable',
@@ -35,11 +35,9 @@ export default {
     };
   },
   mounted() {
-    axios.get('//localhost:3000/api/media')
-      .then((res) => {
-        const data = res.data;
-        if(data.status !== 'success') throw (data);
-        this.tableData = data.data;
+    return Api.getMedia()
+      .then((media) => {
+        this.tableData = media;
         this.loaded = true;
       })
       .catch(console.error);

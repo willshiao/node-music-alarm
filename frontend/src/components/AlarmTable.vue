@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Api from '../lib/api';
 
 export default {
   name: 'AlarmTable',
@@ -52,11 +52,9 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('//localhost:3000/api/alarms')
-        .then((res) => {
-          const data = res.data;
-          if(data.status !== 'success') throw new Error(data);
-          this.tableData = data.data;
+      return Api.getAlarms()
+        .then((media) => {
+          this.tableData = media;
           this.loaded = true;
         })
         .catch(console.error);
