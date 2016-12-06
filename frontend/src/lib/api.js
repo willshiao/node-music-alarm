@@ -8,7 +8,7 @@ export default class Api {
   }
 
   static getMedia() {
-    axios.get(`${API_URL}/media`)
+    return axios.get(`${API_URL}/media`)
       .then((res) => {
         if(res.data.status !== 'success') return Promise.reject(res.data.message);
         return Promise.resolve(res.data.data);
@@ -16,7 +16,7 @@ export default class Api {
   }
 
   static getAlarms() {
-    axios.get(`${API_URL}/alarms`)
+    return axios.get(`${API_URL}/alarms`)
       .then((res) => {
         if(res.data.status !== 'success') return Promise.reject(res.data.message);
         return Promise.resolve(res.data.data);
