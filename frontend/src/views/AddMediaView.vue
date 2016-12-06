@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <h1>Add Media</h1>
-  <form>
+  <form v-on:submit.prevent="onSubmit($event)">
     <div class="form-group">
       <label for="media-name">Name</label>
       <input type="text" id="media-name" class="form-control" aria-describedby="nameHelp" v-model="name">
@@ -23,12 +23,16 @@
       <input type="file" class="form-control-file" id="media-file" aria-describedby="fileHelp">
       <small id="fileHelp" class="form-text text-muted">The media file you want to upload.</small>
     </div>
-    <button class="btn btn-primary" type="submit">Add</button>
+    <button class="btn btn-primary" type="submit" v-bind:disabled="submitting">Add</button>
   </form>
 </div>
 </template>
 
 <script>
+import axios from 'axios';
+import swal from 'sweetalert';
+import 'sweetalert/dist/sweetalert.css';
+import Api from '../lib/api';
 
 export default {
   name: 'AddMediaView',
@@ -37,7 +41,46 @@ export default {
       name: '',
       folder: '',
       filename: '',
+      submitting: false,
     };
+  },
+  methods: {
+    onSubmit(evt) {
+      this.submitting = true;
+      const formData = new FormData();
+      formData.append('name', this.name);
+      formData.append('folder', this.folder);
+      formData.append('filename', this.filename);
+      formData.append('mediaFile', document.getElementById('media-file').files[0]);
+      axios.post(`${Api.API_URL}/media/upload`, formData)
+        .then((res) => {
+          this.submitting = false;
+          console.log(res.data);
+          if(res.data.status === 'success') {
+            swal({
+              type: 'success',
+              title: 'Success',
+              text: 'Media item successfully added!',
+            });
+            evt.srcElement.reset();
+          } else {
+            swal({
+              type: 'warning',
+              title: 'Fail',
+              text: `Media item could not be added because: "${res.data.message}"`,
+            });
+          }
+        })
+        .catch((err) => {
+          this.submitting = false;
+          swal({
+            type: 'error',
+            title: 'Error',
+            text: 'An error occurred.',
+          });
+          console.error(err.message);
+        });
+    },
   },
 };
 </script>

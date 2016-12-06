@@ -3,6 +3,10 @@ import axios from 'axios';
 const API_URL = `//${window.location.hostname}:3000/api`;
 
 export default class Api {
+  static get API_URL() {
+    return API_URL;
+  }
+
   static getPlaying() {
     return axios.get(`${API_URL}/playing`)
       .then((res) => {

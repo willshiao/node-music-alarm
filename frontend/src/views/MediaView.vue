@@ -2,6 +2,7 @@
 <div class="container">
   <h1>Media</h1>
   <media-table></media-table>
+  <router-link class="btn btn-primary" to="/media/new">Add Media</router-link>
 </div>
 </template>
 
