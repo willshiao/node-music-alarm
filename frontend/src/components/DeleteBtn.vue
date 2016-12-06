@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Api from '../lib/api';
 
 export default {
   name: 'DeleteMediaBtn',
@@ -16,13 +16,17 @@ export default {
   methods: {
     sendRequest() {
       this.disabled = true;
-      axios.delete(`//localhost:3000/api/${this.type}/${this.id}`)
-        .then((res) => {
-          if(res.data.status === 'success') {
-            console.log('Deleted successfully');
-            this.$emit('deleted', this.id);
-          }
-        });
+      let req;
+      if(this.type === 'alarm') {
+        req = Api.deleteAlarmById(this.id);
+      } else {
+        req = Api.deleteMediaById(this.id);
+      }
+      req.then(() => {
+        console.log('Deleted successfully');
+        this.disabled = false;
+        this.$emit('deleted', this.id);
+      }).catch(console.error);
     },
   },
 };

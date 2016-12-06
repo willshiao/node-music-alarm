@@ -7,11 +7,35 @@ export default class Api {
     return API_URL;
   }
 
+  static updateItemById(type, id, newItem) {
+    return axios.put(`${API_URL}/${type}/${id}`, newItem)
+      .then((res) => {
+        if(res.data.status !== 'success') return Promise.reject(res.data.message);
+        return Promise.resolve(true);
+      });
+  }
+
   static getMedia() {
     return axios.get(`${API_URL}/media`)
       .then((res) => {
         if(res.data.status !== 'success') return Promise.reject(res.data.message);
         return Promise.resolve(res.data.data);
+      });
+  }
+
+  static deleteMediaById(id) {
+    return axios.delete(`${API_URL}/media/${id}`)
+      .then((res) => {
+        if(res.data.status !== 'success') return Promise.reject(res.data.message);
+        return Promise.resolve(true);
+      });
+  }
+
+  static deleteAlarmById(id) {
+    return axios.delete(`${API_URL}/alarms/${id}`)
+      .then((res) => {
+        if(res.data.status !== 'success') return Promise.reject(res.data.message);
+        return Promise.resolve(true);
       });
   }
 

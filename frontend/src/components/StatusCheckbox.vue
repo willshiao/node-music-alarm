@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Api from '../lib/api';
 
 export default {
   name: 'StatusCheckbox',
@@ -13,12 +13,10 @@ export default {
       this.boxDisabled = true;
       const originalStatus = !this.isEnabled;  // Status before the change
 
-      axios.put(`//localhost:3000/api/${this.type}/${this.id}`, { enabled: this.isEnabled })
-        .then((res) => {
-          if(res.data.status === 'success') {
-            this.boxDisabled = false;
-            this.$emit('toggled', this.id, this.isEnabled);
-          }
+      Api.updateItemById(this.type, this.id, { enabled: this.isEnabled })
+        .then(() => {
+          this.boxDisabled = false;
+          this.$emit('toggled', this.id, this.isEnabled);
         })
         .catch(() => {
           this.boxDisabled = false;
