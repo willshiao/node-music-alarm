@@ -51,7 +51,7 @@ class Media {
   }
 
   static filterPath(pathStr) {  // Prevent directory tranversals
-    return path.normalize(pathStr).replace(/^(\.\.[/\\])+/, '');
+    return path.normalize(pathStr.replace(/^(\.\.[/\\])+/, ''));
   }
 }
 

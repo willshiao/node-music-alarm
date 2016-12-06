@@ -28,6 +28,8 @@
     "config": "^1.24.0",
     "cors": "^2.8.1",
     "express": "^4.14.0",
+    "mkdirp": "^0.5.1",
+    "multer": "^1.2.0",
     "node-omxplayer": "^0.4.1",
     "node-schedule": "^1.2.0",
     "sqlite": "^2.2.2",

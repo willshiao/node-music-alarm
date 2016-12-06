@@ -5,11 +5,38 @@ const config = require('config');
 const router = require('express').Router();
 const player = require('../../lib/player');
 const Media = require('../../models/Media');
+const multer = require('multer');
+const mkdirp = require('mkdirp');
 
 
 function addMediaPath(pathStr) {
   return path.join(config.get('media.dir'), pathStr);
 }
+
+const mediaStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    let folderName = '';
+    if(req.body && req.body.folder) folderName = req.body.folder;
+    folderName = addMediaPath(folderName);
+    mkdirp(Media.filterPath(folderName), (err) => {
+      if(err) return cb(err);
+      cb(null, folderName);
+    });
+  },
+  filename(req, file, cb) {
+    let filename = file.originalname;
+    if(req.body && req.body.filename) {
+      const ext = path.extname(filename);
+      filename = req.body.filename;
+      if(path.extname(filename) !== ext) {
+        // Change file extension to original extension
+        filename = path.basename(filename, path.extname(filename));
+        filename += ext;
+      }
+    }
+    cb(null, filename);
+  },
+});
 
 router.get('/', (req, res) => {
   Media.getAll()
@@ -23,6 +50,23 @@ router.delete('/all', (req, res) => {
   Media.deleteAll()
     .then(() => {
       res.successJson();
+    })
+    .catch(err => res.errorJson(err));
+});
+
+const mediaUpload = multer({ storage: mediaStorage });
+router.post('/upload', mediaUpload.single('mediaFile'), (req, res) => {
+  if(!req.body) return res.failMsg('No arguments found.');
+  if(!req.body.name) return res.failMsg('No name found.');
+  if(!req.file) return res.failMsg('No file found.');
+
+  const media = new Media({
+    path: req.file.path,
+    name: req.body.name,
+  });
+  media.save()
+    .then(() => {
+      res.successJson(media);
     })
     .catch(err => res.errorJson(err));
 });
