@@ -60,7 +60,11 @@ export default {
     };
   },
   mounted() {
-    this.refreshMedia();
+    return Api.getPlaying()
+      .then((playing) => {
+        this.playing = playing;
+        return this.fillRandom();
+      });
   },
   methods: {
     chooseMedia(id, evt) {
@@ -82,19 +86,11 @@ export default {
             return correctMsg();
           }
           incorrectMsg(playing);
-          return this.fillRandom()
-            .then(Api.playRandom)
+          return Api.playRandom()
             .then((newPlaying) => {
               this.playing = newPlaying;
+              return this.fillRandom();
             });
-        });
-    },
-    refreshMedia() {
-      this.media = [];
-      return Api.getPlaying()
-        .then((playing) => {
-          this.playing = playing;
-          return this.fillRandom();
         });
     },
     fillRandom() {
