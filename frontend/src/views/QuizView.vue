@@ -90,6 +90,7 @@ export default {
         });
     },
     refreshMedia() {
+      this.media = [];
       return Api.getPlaying()
         .then((playing) => {
           this.playing = playing;
