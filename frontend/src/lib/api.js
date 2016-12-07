@@ -7,6 +7,14 @@ export default class Api {
     return API_URL;
   }
 
+  static createAlarm(data) {
+    return axios.post(`${API_URL}/alarms`, data)
+      .then((res) => {
+        if(res.data.status !== 'success') return Promise.reject(res.data.message);
+        return Promise.resolve(true);
+      });
+  }
+
   static updateItemById(type, id, newItem) {
     return axios.put(`${API_URL}/${type}/${id}`, newItem)
       .then((res) => {

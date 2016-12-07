@@ -5,9 +5,13 @@
       <router-link class="nav-item" tag="li" to="/home" active-class="active">
         <a class="nav-link">Home</a>
       </router-link>
-      <router-link class="nav-item" tag="li" to="/alarms" active-class="active">
-        <a class="nav-link">Alarms</a>
-      </router-link>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/alarms" id="mediaDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:class="{ active: alarmsActive }">Alarms</a>
+        <div class="dropdown-menu pull-left" aria-labelledby="mediaDropdown">
+          <router-link class="dropdown-item" to="/alarms/new" active-class="active">Create</router-link>
+          <router-link class="dropdown-item" to="/alarms" active-class="active" exact>View</router-link>
+        </div>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="/media" id="mediaDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:class="{ active: mediaActive }">Media</a>
         <div class="dropdown-menu pull-left" aria-labelledby="mediaDropdown">
@@ -25,6 +29,9 @@ export default {
   computed: {
     mediaActive() {
       return this.$route.path.startsWith('/media');
+    },
+    alarmsActive() {
+      return this.$route.path.startsWith('/alarms');
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <h1>Add Media</h1>
-  <form v-on:submit.prevent="onSubmit($event)">
+  <form v-on:submit.prevent="onSubmit">
     <div class="form-group">
       <label for="media-name">Name</label>
       <input type="text" id="media-name" class="form-control" aria-describedby="nameHelp" v-model="name">
@@ -45,7 +45,7 @@ export default {
     };
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit() {
       this.submitting = true;
       const formData = new FormData();
       formData.append('name', this.name);
@@ -62,7 +62,6 @@ export default {
               title: 'Success',
               text: 'Media item successfully added!',
             });
-            evt.srcElement.reset();
           } else {
             swal({
               type: 'warning',
