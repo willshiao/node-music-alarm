@@ -1,14 +1,17 @@
 'use strict';
 
+const path = require('path');
+
+
 module.exports =
 {
   port: 3000,
   db: {
-    path: './files/alarm.db',
-    schema: './files/schema.sql',
+    path: path.resolve(__dirname, '../files/alarm.db'),
+    schema: path.resolve(__dirname, '../files/schema.sql'),
   },
   media: {
-    dir: './files/media',
+    dir: path.resolve(__dirname, '../files/media'),
     extensions: ['mp4', 'mp3'],
   },
   player: {
