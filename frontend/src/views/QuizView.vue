@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import swal from 'sweetalert';
-import 'sweetalert/dist/sweetalert.css';
 import Api from '../lib/api';
 
 const numMedia = 12;
@@ -26,7 +24,7 @@ function randomIndex(max) {
 }
 
 function nothingPlayingMsg() {
-  swal({
+  this.$swal({
     title: 'Nothing Playing',
     text: 'No song is playing right now.',
     type: 'warning',
@@ -34,7 +32,7 @@ function nothingPlayingMsg() {
 }
 
 function incorrectMsg(playing) {
-  swal({
+  this.$swal({
     title: 'Incorrect',
     text: `You guessed incorrectly. The song playing was ${playing.name}.
            Starting another song.`,
@@ -43,7 +41,7 @@ function incorrectMsg(playing) {
 }
 
 function correctMsg() {
-  swal({
+  this.$swal({
     title: 'Correct',
     text: 'You guessed the song correctly! Stopping the song...',
     type: 'success',

@@ -30,8 +30,6 @@
 
 <script>
 import axios from 'axios';
-import swal from 'sweetalert';
-import 'sweetalert/dist/sweetalert.css';
 import Api from '../lib/api';
 
 export default {
@@ -57,13 +55,13 @@ export default {
           this.submitting = false;
           console.log(res.data);
           if(res.data.status === 'success') {
-            swal({
+            this.$swal({
               type: 'success',
               title: 'Success',
               text: 'Media item successfully added!',
             });
           } else {
-            swal({
+            this.$swal({
               type: 'warning',
               title: 'Fail',
               text: `Media item could not be added because: "${res.data.message}"`,
@@ -72,7 +70,7 @@ export default {
         })
         .catch((err) => {
           this.submitting = false;
-          swal({
+          this.$swal({
             type: 'error',
             title: 'Error',
             text: 'An error occurred.',

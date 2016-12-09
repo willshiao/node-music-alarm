@@ -46,8 +46,6 @@
 </template>
 
 <script>
-import 'sweetalert/dist/sweetalert.css';
-import swal from 'sweetalert';
 import Api from '../lib/api';
 
 export default {
@@ -88,7 +86,7 @@ export default {
       return Api.createAlarm(data)
         .then(() => {
           this.submitting = false;
-          swal({
+          this.$swal({
             type: 'success',
             title: 'Success',
             text: 'Alarm successfully added!',
@@ -96,7 +94,7 @@ export default {
           this.name = '';
         }).catch((err) => {
           this.submitting = false;
-          swal({
+          this.$swal({
             type: 'warning',
             title: 'Fail',
             text: `Media item could not be added because: "${err}"`,
