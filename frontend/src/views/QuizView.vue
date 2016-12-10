@@ -23,31 +23,6 @@ function randomIndex(max) {
   return Math.floor(Math.random() * (Math.floor(max)));
 }
 
-function nothingPlayingMsg() {
-  this.$swal({
-    title: 'Nothing Playing',
-    text: 'No song is playing right now.',
-    type: 'warning',
-  });
-}
-
-function incorrectMsg(playing) {
-  this.$swal({
-    title: 'Incorrect',
-    text: `You guessed incorrectly. The song playing was ${playing.name}.
-           Starting another song.`,
-    type: 'error',
-  });
-}
-
-function correctMsg() {
-  this.$swal({
-    title: 'Correct',
-    text: 'You guessed the song correctly! Stopping the song...',
-    type: 'success',
-  });
-}
-
 export default {
   name: 'QuizView',
   data() {
@@ -69,21 +44,21 @@ export default {
       evt.preventDefault();
       console.log('Chose: ', id);
 
-      if(this.playing === null) return nothingPlayingMsg();
+      if(this.playing === null) return this.nothingPlayingMsg();
       if(id === this.playing.id) {
         Api.stopPlaying();
-        return correctMsg();
+        return this.correctMsg();
       }
       return Api.getPlaying()
         .then((playing) => {
           if(playing === null) {
             this.playing = null;
-            return nothingPlayingMsg();
+            return this.nothingPlayingMsg();
           } else if(id === playing.id) {
             Api.stopPlaying();
-            return correctMsg();
+            return this.correctMsg();
           }
-          incorrectMsg(playing);
+          this.incorrectMsg(playing);
           return Api.playRandom()
             .then((newPlaying) => {
               this.playing = newPlaying;
@@ -96,6 +71,28 @@ export default {
         .then((media) => {
           this.media = media;
         });
+    },
+    nothingPlayingMsg() {
+      this.$swal({
+        title: 'Nothing Playing',
+        text: 'No song is playing right now.',
+        type: 'warning',
+      });
+    },
+    incorrectMsg(playing) {
+      this.$swal({
+        title: 'Incorrect',
+        text: `You guessed incorrectly. The song playing was ${playing.name}.
+               Starting another song.`,
+        type: 'error',
+      });
+    },
+    correctMsg() {
+      this.$swal({
+        title: 'Correct',
+        text: 'You guessed the song correctly! Stopping the song...',
+        type: 'success',
+      });
     },
   },
   watch: {
