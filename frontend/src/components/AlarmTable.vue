@@ -53,8 +53,8 @@ export default {
   methods: {
     fetchData() {
       return Api.getAlarms()
-        .then((media) => {
-          this.tableData = media;
+        .then((alarms) => {
+          this.tableData = alarms;
           this.loaded = true;
         })
         .catch(console.error);

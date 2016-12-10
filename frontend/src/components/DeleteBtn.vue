@@ -17,7 +17,7 @@ export default {
     sendRequest() {
       this.disabled = true;
       let req;
-      if(this.type === 'alarm') {
+      if(this.type === 'alarms') {
         req = Api.deleteAlarmById(this.id);
       } else {
         req = Api.deleteMediaById(this.id);
