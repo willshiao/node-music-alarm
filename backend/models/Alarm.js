@@ -42,6 +42,11 @@ class Alarm {
     return job;
   }
 
+  static scheduleById(id) {
+    return Alarm.getByid(id)
+      .then(alarm => Promise.resolve(alarm.schedule()));
+  }
+
   cancel() {
     if(this.id === undefined || !(this.id in storage.alarms)) {
       logger.debug('Failed to cancel job - maybe it was already disabled?');

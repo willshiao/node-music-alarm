@@ -39,8 +39,11 @@ router.put('/:id', (req, res) => {
     .then(() => {
       if(req.body.enabled === false && id in storage.alarms) {
         Alarm.cancelById(id);
+        res.successJson();
+      } else if(req.body.enabled === true && !(id in storage.alarms)) {
+        return Alarm.scheduleById(id)
+          .then(() => res.successJson());
       }
-      res.successJson();
     })
     .catch(err => res.errorJson(err));
 });
