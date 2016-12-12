@@ -40,7 +40,7 @@ me.playMedia = function playMedia(media, cancelPlaying = true, cb) {
       .asCallback(cb);
   }
   if(me.openPlayer === null || me.openMedia === null) {  // No media playing
-    return play.asCallback(cb);
+    return play().asCallback(cb);
   }
   return Promise.resolve(me.openPlayer);  // Media is already playing
 };
