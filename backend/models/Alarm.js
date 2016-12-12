@@ -43,7 +43,7 @@ class Alarm {
   }
 
   static scheduleById(id) {
-    return Alarm.getByid(id)
+    return Alarm.getById(id)
       .then(alarm => Promise.resolve(alarm.schedule()));
   }
 
