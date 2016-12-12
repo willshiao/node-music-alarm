@@ -11,7 +11,7 @@ me.openMedia = null;
 me.stopped = false;
 
 
-me.playMedia = function playMedia(media, cancelPlaying = true, cb) {
+me.playMedia = function playMedia(media, cancelPlaying = true, onClose = null, cb = undefined) {
   const play = (status) => {
     if(status) logger.debug('Stopped currently playing media.');
     logger.debug('Playing: ', media.name);
@@ -23,6 +23,7 @@ me.playMedia = function playMedia(media, cancelPlaying = true, cb) {
     me.stopped = false;
 
     player.on('close', () => {
+      if(onClose) onClose();
       me.openPlayer = null;
       me.openMedia = null;
       logger.debug('Done playing: ', media.name);
@@ -42,7 +43,7 @@ me.playMedia = function playMedia(media, cancelPlaying = true, cb) {
   if(me.openPlayer === null || me.openMedia === null) {  // No media playing
     return play().asCallback(cb);
   }
-  return Promise.resolve(me.openPlayer);  // Media is already playing
+  return Promise.resolve(false);  // Media is already playing
 };
 
 me.stopMedia = function stopMedia(cb) {

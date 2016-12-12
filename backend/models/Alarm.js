@@ -29,13 +29,10 @@ class Alarm {
     const job = scheduler.scheduleJob(this.rule, () => {
       const playRandom = () => {
         Media.getRandom()
-          .then((media) => {
-            const p = player.playMedia(media, false);
-            p.on('close', () => {
-              if(!player.stopped) setTimeout(playRandom, 1000);
-            });
-          });
-      };
+          .then(media => player.playMedia(media, false, () => {
+            if(!player.stopped) setTimeout(playRandom, 1000);
+          }));
+      }
       playRandom();
     });
     storage.alarms[this.id] = job;
