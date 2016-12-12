@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const Alarm = require('../../models/Alarm');
+const storage = require('../../lib/storage');
 
 
 router.get('/', (req, res) => {
@@ -19,9 +20,11 @@ router.post(['/', '/new'], (req, res) => {
     rule: req.body.rule,
   });
   alarm.save()
-    .then(() => res.successJson())
+    .then(() => {
+      res.successJson();
+      alarm.schedule();
+    })
     .catch(err => res.errorJson(err));
-  alarm.schedule();
 });
 
 router.put('/:id', (req, res) => {
@@ -33,13 +36,24 @@ router.put('/:id', (req, res) => {
   }
   const id = parseInt(req.params.id, 10);
   Alarm.updateById(id, req.body)
-    .then(() => res.successJson())
+    .then(() => {
+      if(req.body.enabled === false && id in storage.alarms) {
+        Alarm.cancelById(id);
+      }
+      res.successJson();
+    })
     .catch(err => res.errorJson(err));
 });
 
 router.delete('/all', (req, res) => {
   Alarm.deleteAll()
-    .then(() => res.successJson())
+    .then(() => {
+      this.storage.alarms.forEach((item, key) => {
+        item.cancel();
+        delete this.storage[key];
+      });
+      res.successJson();
+    })
     .catch(err => res.errorJson(err));
 });
 
@@ -49,7 +63,10 @@ router.delete('/:id', (req, res) => {
   }
   const id = parseInt(req.params.id, 10);
   Alarm.deleteById(id)
-    .then(() => res.successJson())
+    .then(() => {
+      Alarm.cancelById(id);
+      res.successJson();
+    })
     .catch(err => res.errorJson(err));
 });
 

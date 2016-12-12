@@ -5,6 +5,7 @@ const logger = require('../lib/logger');
 const scheduler = require('node-schedule');
 const Media = require('./Media');
 const player = require('../lib/player');
+const storage = require('../lib/storage');
 
 class Alarm {
   constructor(data) {
@@ -17,12 +18,15 @@ class Alarm {
   save() {
     return db.run('INSERT INTO `alarms` (rule, name) VALUES (?,?)', [
       this.rule, this.name,
-    ]);
+    ]).then((data) => {
+      this.id = data.lastID;
+      return Promise.resolve(data);
+    });
   }
 
   schedule() {
-    logger.debug(`Scheduling ${this.name} with rule ${this.rule}`);
-    return scheduler.scheduleJob(this.rule, () => {
+    logger.debug(`Scheduling ${this.name} (ID: ${this.id}) with rule ${this.rule}.`);
+    const job = scheduler.scheduleJob(this.rule, () => {
       const playRandom = () => {
         Media.getRandom()
           .then((media) => {
@@ -34,6 +38,28 @@ class Alarm {
       };
       playRandom();
     });
+    storage.alarms[this.id] = job;
+    return job;
+  }
+
+  cancel() {
+    if(this.id === undefined || !(this.id in storage.alarms)) {
+      logger.debug('Failed to cancel job - maybe it was already disabled?');
+      return;
+    }
+    logger.debug(`Attempting to cancel job with ID ${this.id}.`);
+    storage.alarms[this.id].cancel();
+    delete storage.alarms[this.id];
+  }
+
+  static cancelById(id) {
+    if(!(id in storage.alarms)) {
+      logger.debug(`Failed to cancel job with ID=${id}.`);
+      return;
+    }
+    logger.debug(`Attempting to cancel job with ID ${id}.`);
+    storage.alarms[id].cancel();
+    delete storage.alarms[id];
   }
 
   static getAll(onlyEnabled = false) {
