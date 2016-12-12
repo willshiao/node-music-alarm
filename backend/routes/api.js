@@ -28,7 +28,8 @@ router.get('/play/random', (req, res) => {
       logger.debug('Playing random media: ', media);
       current = media;
       return player.playMedia(current);
-    }).then(() => {
+    })
+    .then(() => {
       res.successJson({ playing: current });
     })
     .catch(err => res.errorJson(err));

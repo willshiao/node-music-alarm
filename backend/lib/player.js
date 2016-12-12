@@ -11,29 +11,38 @@ me.openMedia = null;
 me.stopped = false;
 
 
-me.playMedia = function playMedia(media, cb) {
-  return me.stopMedia()
-    .then((status) => {
-      if(status) logger.debug('Stopped currently playing media.');
-      logger.debug('Playing: ', media.name);
+me.playMedia = function playMedia(media, cancelPlaying = true, cb) {
+  const play = (status) => {
+    if(status) logger.debug('Stopped currently playing media.');
+    logger.debug('Playing: ', media.name);
 
-      const player = Omx(media.path, config.get('player.output'), config.get('player.loop'),
-        config.get('player.initialVolume'));
-      me.openPlayer = player;
-      me.openMedia = media;
-      me.stopped = false;
+    const player = Omx(media.path, config.get('player.output'), config.get('player.loop'),
+      config.get('player.initialVolume'));
+    me.openPlayer = player;
+    me.openMedia = media;
+    me.stopped = false;
 
-      player.on('close', () => {
-        me.openPlayer = null;
-        me.openMedia = null;
-        logger.debug('Done playing: ', media.name);
-      });
+    player.on('close', () => {
+      me.openPlayer = null;
+      me.openMedia = null;
+      logger.debug('Done playing: ', media.name);
+    });
 
-      player.on('error', (err) => {
-        logger.error('Error playing media: ', err);
-      });
-      return Promise.resolve(player);
-    }).asCallback(cb);
+    player.on('error', (err) => {
+      logger.error('Error playing media: ', err);
+    });
+    return Promise.resolve(player);
+  };
+
+  if(cancelPlaying) {
+    return me.stopMedia()
+      .then(play)
+      .asCallback(cb);
+  }
+  if(me.openPlayer === null || me.openMedia === null) {  // No media playing
+    return play.asCallback(cb);
+  }
+  return Promise.resolve(me.openPlayer);  // Media is already playing
 };
 
 me.stopMedia = function stopMedia(cb) {

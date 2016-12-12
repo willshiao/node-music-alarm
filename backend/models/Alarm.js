@@ -30,7 +30,7 @@ class Alarm {
       const playRandom = () => {
         Media.getRandom()
           .then((media) => {
-            const p = player.playMedia(media);
+            const p = player.playMedia(media, false);
             p.on('close', () => {
               if(!player.stopped) setTimeout(playRandom, 1000);
             });
