@@ -8,7 +8,6 @@ const express = require('express');
 const Alarm = require('./models/Alarm');
 const db = require('./lib/db');
 const logger = require('./lib/logger');
-const storage = require('./lib/storage');
 require('./lib/extend').extendResponse(express.response);
 
 const apiRoutes = require('./routes/api');
