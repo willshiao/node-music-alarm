@@ -21,6 +21,21 @@ router.get('/test', (req, res) => {
   res.send('OK');
 });
 
+router.get('/play', (req, res) => {
+  if(!req.query || !req.query.id) {
+    return res.errorMsg('No media ID given.');
+  }
+  const mediaId = parseInt(req.query.id, 10);
+  if(isNaN(mediaId)) return res.errorMsg('Invalid ID given.');
+  Media.getById(mediaId)
+    .then((media) => {
+      logger.debug('Playing by ID: ', media);
+      return player.playMedia(media);
+    })
+    .then(() => res.sucessJson())
+    .catch(err => res.errorJson(err));
+});
+
 router.get('/play/random', (req, res) => {
   let current;
   Media.getRandom()
