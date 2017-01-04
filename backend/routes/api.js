@@ -32,7 +32,7 @@ router.get('/play', (req, res) => {
       logger.debug('Playing by ID: ', media);
       return player.playMedia(media);
     })
-    .then(() => res.sucessJson())
+    .then(() => res.successJson())
     .catch(err => res.errorJson(err));
 });
 
