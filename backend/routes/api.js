@@ -21,21 +21,6 @@ router.get('/test', (req, res) => {
   res.send('OK');
 });
 
-router.get('/play', (req, res) => {
-  if(!req.query || !req.query.id) {
-    return res.errorMsg('No media ID given.');
-  }
-  const mediaId = parseInt(req.query.id, 10);
-  if(isNaN(mediaId)) return res.errorMsg('Invalid ID given.');
-  Media.getById(mediaId)
-    .then((media) => {
-      logger.debug('Playing by ID: ', media);
-      return player.playMedia(media);
-    })
-    .then(() => res.successJson())
-    .catch(err => res.errorJson(err));
-});
-
 router.get('/play/random', (req, res) => {
   let current;
   Media.getRandom()
@@ -50,12 +35,11 @@ router.get('/play/random', (req, res) => {
     .catch(err => res.errorJson(err));
 });
 
-router.get('/play/:fileName', (req, res) => {
-  const fileName = req.params.fileName;
-  if(!fileName) return res.failMsg('Invalid parameters');
+router.get('/play', (req, res) => {
+  if(!req.query || !req.query.path) return res.failMsg('Invalid parameters');
   const media = new Media({
-    name: fileName,
-    path: fileName,
+    name: req.query.path,
+    path: req.query.path,
   });
 
   fs.stat(media.path, (err) => {
@@ -68,6 +52,21 @@ router.get('/play/:fileName', (req, res) => {
       res.errorJson(err);
     }
   });
+});
+
+router.get('/play/:id', (req, res) => {
+  if(!req.params.id) return res.errorMsg('Invalid parameters');
+
+  const mediaId = parseInt(req.params.id, 10);
+  if(isNaN(mediaId)) return res.errorMsg('Invalid ID given');
+
+  Media.getById(mediaId)
+    .then((media) => {
+      logger.debug('Playing by ID: ', media);
+      return player.playMedia(media);
+    })
+    .then(() => res.successJson())
+    .catch(err => res.errorJson(err));
 });
 
 router.get('/playing', (req, res) => {
