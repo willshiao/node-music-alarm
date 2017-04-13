@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const config = require('config');
 const router = require('express').Router();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -8,6 +9,7 @@ const cors = require('cors');
 const Media = require('../models/Media');
 const player = require('../lib/player');
 const logger = require('../lib/logger');
+const storage = require('../lib/storage');
 const mediaRoutes = require('./api/media');
 const alarmRoutes = require('./api/alarms');
 
@@ -67,6 +69,28 @@ router.get('/play/:id', (req, res) => {
     })
     .then(() => res.successJson())
     .catch(err => res.errorJson(err));
+});
+
+router.get('/guess/:id', (req, res) => {
+  if(!req.params.id) return res.errorMsg('Invalid parameters');
+
+  const guessId = parseInt(req.params.id, 10);
+  if(isNaN(guessId)) return res.errorMsg('Invalid ID guessed.');
+
+  if(player.openMedia === null) return res.failMsg('No song playing.');
+  if(storage.timeout) return res.failMsg('Can not guess yet.');
+
+  if(player.openMedia.id !== guessId) {
+    storage.timeout = true;
+    setTimeout(config.get('alarm.guessInterval'), () => { storage.timeout = false; });
+
+    return res.successJson({
+      correct: false,
+      duration: config.get('alarm.guessInterval'),
+    });
+  }
+  return player.stopMedia()
+    .then(() => res.successJson({ correct: true }));
 });
 
 router.get('/playing', (req, res) => {

@@ -19,4 +19,7 @@ module.exports =
     output: 'local',  // Output interface - local, hdmi, or both
     loop: false,
   },
+  alarm: {
+    guessInterval: 15000,  // Minimium amount of time between guesses, in milliseconds.
+  },
 };

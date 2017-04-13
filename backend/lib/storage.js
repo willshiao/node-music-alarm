@@ -2,4 +2,5 @@
 
 module.exports = {
   alarms: {},
+  timeout: false,
 };
