@@ -66,6 +66,14 @@ export default class Api {
       });
   }
 
+  static guessPlaying(id) {
+    return axios.get(`${API_URL}/guess/${id}`)
+      .then((res) => {
+        if(res.data.status !== 'success') return Promise.reject(res.data.message);
+        return Promise.resolve(res.data.data);
+      });
+  }
+
   static stopPlaying() {
     return axios.get(`${API_URL}/stop`);
   }

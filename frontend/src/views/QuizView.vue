@@ -49,21 +49,19 @@ export default {
         Api.stopPlaying();
         return this.correctMsg();
       }
-      return Api.getPlaying()
-        .then((playing) => {
-          if(playing === null) {
-            this.playing = null;
-            return this.nothingPlayingMsg();
-          } else if(id === playing.id) {
-            Api.stopPlaying();
-            return this.correctMsg();
-          }
-          this.incorrectMsg(playing);
-          return Api.playRandom()
-            .then((newPlaying) => {
-              this.playing = newPlaying;
-              return this.fillRandom();
-            });
+      return Api.guessPlaying(id)
+        .then((res) => {
+          if(res.correct) return this.correctMsg();
+          this.incorrectMsg(res.wasPlaying);
+          this.playing = res.newPlaying;
+          return this.fillRandom();
+        })
+        .catch((err) => {
+          console.error('Error:', err);
+          return this.errorMsg({
+            title: 'Error',
+            message: err,
+          });
         });
     },
     fillRandom() {
@@ -77,6 +75,13 @@ export default {
         title: 'Nothing Playing',
         text: 'No song is playing right now.',
         type: 'warning',
+      });
+    },
+    errorMsg(msg) {
+      this.$swal({
+        title: msg.title,
+        text: msg.text,
+        type: 'error',
       });
     },
     incorrectMsg(playing) {
