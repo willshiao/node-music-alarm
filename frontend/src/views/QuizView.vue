@@ -45,10 +45,6 @@ export default {
       console.log('Chose: ', id);
 
       if(this.playing === null) return this.nothingPlayingMsg();
-      if(id === this.playing.id) {
-        Api.stopPlaying();
-        return this.correctMsg();
-      }
       return Api.guessPlaying(id)
         .then((res) => {
           console.log('Got response: ', res);
