@@ -76,11 +76,13 @@ router.get('/guess/:id', (req, res) => {
 
   const guessId = parseInt(req.params.id, 10);
   if(isNaN(guessId)) return res.errorMsg('Invalid ID guessed');
+  logger.debug(`Got guess for ID: ${guessId}`);
 
   if(player.openMedia === null) return res.failMsg('No media playing');
   if(storage.timeout) return res.failMsg('Can not guess yet');
 
   if(player.openMedia.id !== guessId) {
+    logger.debug(`Guess incorrect, ${guessId} !== ${player.openMedia.id}`);
     storage.timeout = true;
     setTimeout(config.get('alarm.guessInterval'), () => { storage.timeout = false; });
 
@@ -101,6 +103,7 @@ router.get('/guess/:id', (req, res) => {
         }))
       .catch(err => res.errorJson(err));
   }
+  logger.debug('Guess correct.');
   return player.stopMedia()
     .then(() => res.successJson({ correct: true }));
 });
