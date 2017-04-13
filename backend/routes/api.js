@@ -75,19 +75,31 @@ router.get('/guess/:id', (req, res) => {
   if(!req.params.id) return res.errorMsg('Invalid parameters');
 
   const guessId = parseInt(req.params.id, 10);
-  if(isNaN(guessId)) return res.errorMsg('Invalid ID guessed.');
+  if(isNaN(guessId)) return res.errorMsg('Invalid ID guessed');
 
-  if(player.openMedia === null) return res.failMsg('No song playing.');
-  if(storage.timeout) return res.failMsg('Can not guess yet.');
+  if(player.openMedia === null) return res.failMsg('No media playing');
+  if(storage.timeout) return res.failMsg('Can not guess yet');
 
   if(player.openMedia.id !== guessId) {
     storage.timeout = true;
     setTimeout(config.get('alarm.guessInterval'), () => { storage.timeout = false; });
 
-    return res.successJson({
-      correct: false,
-      duration: config.get('alarm.guessInterval'),
-    });
+    const wasPlaying = player.openMedia;
+    let rand;
+    return Media.getRandom()
+      .then((media) => {
+        logger.debug('Playing random media: ', media);
+        rand = media;
+        return player.playMedia(media);
+      })
+      .then(() =>
+        res.successJson({
+          correct: false,
+          wasPlaying,
+          playing: rand,
+          duration: config.get('alarm.guessInterval'),
+        }))
+      .catch(err => res.errorJson(err));
   }
   return player.stopMedia()
     .then(() => res.successJson({ correct: true }));
