@@ -51,16 +51,17 @@ export default {
       }
       return Api.guessPlaying(id)
         .then((res) => {
+          console.log('Got response: ', res);
           if(res.correct) return this.correctMsg();
           this.incorrectMsg(res.wasPlaying);
-          this.playing = res.newPlaying;
+          this.playing = res.playing;
           return this.fillRandom();
         })
         .catch((err) => {
           console.error('Error:', err);
           return this.errorMsg({
-            title: 'Error',
-            message: err,
+            title: err,
+            text: err,
           });
         });
     },
