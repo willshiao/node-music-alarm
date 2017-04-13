@@ -79,7 +79,7 @@ router.get('/guess/:id', (req, res) => {
   logger.debug(`Got guess for ID: ${guessId}`);
 
   if(player.openMedia === null) return res.failMsg('No media playing');
-  if(storage.timeout) return res.failMsg('Can not guess yet');
+  if(storage.timeout) return res.failMsg('Cannot guess yet');
 
   if(player.openMedia.id !== guessId) {
     logger.debug(`Guess incorrect, ${guessId} !== ${player.openMedia.id}`);
