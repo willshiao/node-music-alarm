@@ -3,6 +3,7 @@
 const router = require('express').Router();
 const Alarm = require('../../models/Alarm');
 const storage = require('../../lib/storage');
+const logger = require('../../lib/logger');
 
 
 router.get('/', (req, res) => {
@@ -35,6 +36,8 @@ router.put('/:id', (req, res) => {
     return res.failMsg('Missing or invalid contents');
   }
   const id = parseInt(req.params.id, 10);
+  logger.debug(`Updating alarm with ID = ${id} to `, req.body);
+
   Alarm.updateById(id, req.body)
     .then(() => {
       if(req.body.enabled === false && id in storage.alarms) {
@@ -43,6 +46,9 @@ router.put('/:id', (req, res) => {
       } else if(req.body.enabled === true && !(id in storage.alarms)) {
         return Alarm.scheduleById(id)
           .then(() => res.successJson());
+      } else {
+        logger.debug('Value of alarm not changed');
+        res.failMsg(`Alarm state already ${req.body.enabled}; not changed.`);
       }
     })
     .catch(err => res.errorJson(err));
