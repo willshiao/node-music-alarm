@@ -31,19 +31,26 @@ export default {
             });
           },
           toggleEnabled(h, row) {
-            return h('status-checkbox', {
+            console.log('Row:', row);
+            const toReturn = new h('status-checkbox', {
               props: {
                 id: row.id,
                 type: 'alarms',
                 wasEnabled: row.enabled,
+                // isEnabled: row.enabled,
               },
               on: { toggled: el.toggleEnabled },
             });
+            // toReturn.created();
+            console.log('Return: ', toReturn);
+            return toReturn;
           },
         },
         pagination: {
-          dropdown: true,
+          chunk: 10,
         },
+        perPage: 100,
+        perPageValues: [10, 25, 100, 1000, 10000],
       },
     };
   },
@@ -63,6 +70,7 @@ export default {
       this.tableData = this.tableData.filter(row => row.id !== id);
     },
     toggleEnabled(id, isEnabled) {
+      console.log('Toggling enabled status for row', id);
       this.tableData.forEach((row) => {
         if(row.id !== id) return;
         row.enabled = isEnabled;

@@ -10,10 +10,11 @@
   "dependencies": {
     "axios": "^0.15.2",
     "bootstrap": "^4.0.0-alpha.5",
+    "tether": "^1.4.0",
     "vue": "^2.0.1",
     "vue-router": "^2.0.1",
     "vue-sweetalert": "^0.1.16",
-    "vue-tables-2": "^0.2.4"
+    "vue-tables-2": "^0.2.78"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -34,7 +35,7 @@
     "file-loader": "^0.9.0",
     "style-loader": "^0.13.1",
     "vue-loader": "^9.7.0",
-    "webpack": "^2.1.0-beta.25",
-    "webpack-dev-server": "^2.1.0-beta.0"
+    "webpack": "^2.1.0-beta.26",
+    "webpack-dev-server": "^2.1.0-beta.12"
   }
 }

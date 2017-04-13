@@ -25,13 +25,22 @@ export default {
     },
   },
   data() {
+    console.log(`Data: ${this.id}: ${this.wasEnabled}`);
     return {
       isEnabled: this.wasEnabled,
       boxDisabled: false,
     };
   },
+  // mounted() {
+    // console.log(`Mounted: ${this.id}`);
+    // this.isEnabled = this.wasEnabled;
+  // },
+  created() {
+    console.log('Created ');
+  },
   watch: {
     isEnabled() {
+      console.log('Request sent');
       this.sendRequest();
     },
   },
