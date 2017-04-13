@@ -84,7 +84,7 @@ router.get('/guess/:id', (req, res) => {
   if(player.openMedia.id !== guessId) {
     logger.debug(`Guess incorrect, ${guessId} !== ${player.openMedia.id}`);
     storage.timeout = true;
-    setTimeout(config.get('alarm.guessInterval'), () => { storage.timeout = false; });
+    setTimeout(() => { storage.timeout = false; }, config.get('alarm.guessInterval'));
 
     const wasPlaying = player.openMedia;
     let rand;
