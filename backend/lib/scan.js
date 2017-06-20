@@ -27,4 +27,24 @@ function scanDir(dirPath) {
     .then(dirs => Promise.resolve(cleanDirs(dirs)));
 }
 
-module.exports = scanDir;
+function processItem(itemPath) {
+  const absPath = path.resolve(itemPath);
+  const info = path.parse(absPath);
+
+  return {
+    name: info.name,
+    path: absPath,
+    tags: info.dir.replace(config.get('media.dir'), '').split(path.sep).filter(s => s),
+  };
+}
+
+function discover(dirPath) {
+  return scanDir(dirPath)
+    .map(processItem);
+}
+
+module.exports = {
+  scan: scanDir,
+  process: processItem,
+  discover,
+};
