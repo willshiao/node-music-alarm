@@ -12,7 +12,7 @@ module.exports =
   },
   media: {
     dir: path.resolve(__dirname, '../files/media'),
-    extensions: ['mp4', 'mp3'],
+    extensions: ['mp4', 'mp3', 'flac', 'wav'],
   },
   player: {
     initialVolume: -5,
