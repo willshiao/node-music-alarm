@@ -16,8 +16,8 @@ const app = express();
 app.use('/api', apiRoutes);
 
 
-Alarm.sync({ force: true })
-  .then(() => Media.sync({ force: true }))
+Alarm.sync({ force: false })
+  .then(() => Media.sync({ force: false }))
   .then(() => {
     const port = process.env.PORT || config.get('port');
     app.listen(port, () => {

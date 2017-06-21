@@ -28,6 +28,26 @@ class AlarmHelper {
     return Alarm.findById(id)
       .then(alarm => AlarmHelper.schedule(alarm));
   }
+
+  static cancel(alarm) {
+    if(alarm.id === undefined || !(alarm.id in storage.alarms)) {
+      logger.debug('Failed to cancel job - maybe it was already disabled?');
+      return;
+    }
+    logger.debug(`Attempting to cancel job with ID ${alarm.id}.`);
+    storage.alarms[alarm.id].cancel();
+    delete storage.alarms[alarm.id];
+  }
+
+  static cancelById(id) {
+    if(!(id in storage.alarms)) {
+      logger.debug(`Failed to cancel job with ID=${id}.`);
+      return;
+    }
+    logger.debug(`Attempting to cancel job with ID ${id}.`);
+    storage.alarms[id].cancel();
+    delete storage.alarms[id];
+  }
 }
 
 module.exports = AlarmHelper;

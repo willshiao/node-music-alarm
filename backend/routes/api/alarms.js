@@ -2,12 +2,13 @@
 
 const router = require('express').Router();
 const Alarm = require('../../models/Alarm');
+const AlarmHelper = require('../../lib/alarm-helper');
 const storage = require('../../lib/storage');
 const logger = require('../../lib/logger');
 
 
 router.get('/', (req, res) => {
-  Alarm.getAll()
+  Alarm.findAll()
     .then(alarms => res.successJson(alarms))
     .catch(err => res.errorJson(err));
 });
@@ -16,14 +17,13 @@ router.post(['/', '/new'], (req, res) => {
   if(!req.body || !req.body.rule || !req.body.name) {
     return res.failMsg('Missing one or more form fields');
   }
-  const alarm = new Alarm({
+  Alarm.create({
     name: req.body.name,
     rule: req.body.rule,
-  });
-  alarm.save()
-    .then(() => {
+  })
+    .then((alarm) => {
+      AlarmHelper.schedule(alarm);
       res.successJson();
-      alarm.schedule();
     })
     .catch(err => res.errorJson(err));
 });
@@ -38,13 +38,13 @@ router.put('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
   logger.debug(`Updating alarm with ID = ${id} to `, req.body);
 
-  Alarm.updateById(id, req.body)
+  Alarm.update(req.body, { where: { id } })
     .then(() => {
       if(req.body.enabled === false && id in storage.alarms) {
-        Alarm.cancelById(id);
+        AlarmHelper.cancelById(id);
         res.successJson();
       } else if(req.body.enabled === true && !(id in storage.alarms)) {
-        return Alarm.scheduleById(id)
+        return AlarmHelper.scheduleById(id)
           .then(() => res.successJson());
       } else {
         logger.debug('Value of alarm not changed');
@@ -55,11 +55,11 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/all', (req, res) => {
-  Alarm.deleteAll()
+  Alarm.sync({ forced: true })  // Lazy truncate
     .then(() => {
-      this.storage.alarms.forEach((item, key) => {
+      storage.alarms.forEach((item, key) => {
         item.cancel();
-        delete this.storage[key];
+        delete storage[key];
       });
       res.successJson();
     })
@@ -71,9 +71,9 @@ router.delete('/:id', (req, res) => {
     return res.failMsg('Invalid ID');
   }
   const id = parseInt(req.params.id, 10);
-  Alarm.deleteById(id)
+  Alarm.destroy({ where: { id } })
     .then(() => {
-      Alarm.cancelById(id);
+      AlarmHelper.cancelById(id);  // In case it's enabled
       res.successJson();
     })
     .catch(err => res.errorJson(err));
