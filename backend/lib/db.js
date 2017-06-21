@@ -1,13 +1,8 @@
 'use strict';
 
-const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs'));
-const db = require('sqlite');
 const config = require('config');
+const Sequelize = require('sequelize');
 
-db.createTables = function createTables() {
-  return fs.readFileAsync(config.get('db.schema'), 'utf8')
-    .then(data => db.exec(data));
-};
+const db = new Sequelize(config.get('db.path'));
 
 module.exports = db;
