@@ -5,6 +5,7 @@ const config = require('config');
 const router = require('express').Router();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const _ = require('lodash');
 
 const Media = require('../models/Media');
 const player = require('../lib/player');
@@ -134,5 +135,30 @@ router.get('/rescan', (req, res) => {
     })
     .catch(err => res.errorJson(err));
 });
+
+function mediaEqual(m1, m2) {
+  return m1.path === m2.path;
+}
+
+router.get('/discover', (req, res) => {
+  let newMedia;
+  let toAdd;
+  let toDelete;
+
+  scan.discover(config.get('media.dir'))
+    .then((media) => {
+      newMedia = media;
+      return Media.findAll();
+    })
+    .then((oldMedia) => {
+      toDelete = _.differenceWith(oldMedia, newMedia, mediaEqual);
+      toAdd = _.differenceWith(newMedia, oldMedia, mediaEqual);
+      return Media.destroy({ where: { id: toDelete.map(m => m.id) } });
+    })
+    .then(() => Media.bulkCreate(toAdd))
+    .then(() => res.successJson({ added: toAdd, deleted: toDelete }))
+    .catch(err => res.errorJson(err));
+});
+
 
 module.exports = router;
