@@ -13,6 +13,7 @@ me.stopped = false;
 
 
 me.playMedia = function playMedia(media, cancelPlaying = true, onClose = null, cb = undefined) {
+  console.log('Playing: ', media);
   const play = (status) => {
     if(status) logger.debug('Stopped currently playing media.');
     logger.debug('Playing: ', media.name);

@@ -2,11 +2,13 @@
 
 const path = require('path');
 const config = require('config');
+const multer = require('multer');
+const mkdirp = require('mkdirp');
+
 const router = require('express').Router();
 const player = require('../../lib/player');
 const Media = require('../../models/Media');
-const multer = require('multer');
-const mkdirp = require('mkdirp');
+const MediaHelper = require('../../lib/media-helper');
 
 
 function addMediaPath(pathStr) {
@@ -135,7 +137,7 @@ router.get('/play/:id', (req, res) => {
 });
 
 router.get('/random', (req, res) => {
-  Media.getRandom()
+  MediaHelper.getRandom()
     .then((row) => {
       res.successJson(row);
     })
@@ -148,7 +150,7 @@ router.get('/random/:limit', (req, res) => {
   }
 
   const limit = parseInt(req.params.limit, 10);
-  Media.getRandomLimit(limit)
+  MediaHelper.getRandomLimit(limit)
     .then(media => res.successJson(media))
     .catch(err => res.errorJson(err));
 });
