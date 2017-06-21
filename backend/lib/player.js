@@ -1,9 +1,10 @@
 'use strict';
 
 const Omx = require('node-omxplayer');
-const logger = require('./logger');
 const config = require('config');
 const Promise = require('bluebird');
+const logger = require('./logger');
+const Media = require('../models/Media');
 
 const me = module.exports;
 me.openPlayer = null;  // Currently open player (if any)
@@ -32,7 +33,9 @@ me.playMedia = function playMedia(media, cancelPlaying = true, onClose = null, c
     player.on('error', (err) => {
       logger.error('Error playing media: ', err);
     });
-    return Promise.resolve(player);
+
+    return media.increment({ numPlays: 1 })
+      .then(() => Promise.resolve(player));
   };
 
   if(cancelPlaying) {

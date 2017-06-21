@@ -6,6 +6,7 @@ const Media = require('../models/Media');
 const Alarm = require('../models/Alarm');
 const player = require('./player');
 const storage = require('./storage');
+const MediaHelper = require('./media-helper');
 
 class AlarmHelper {
   static schedule(alarm) {
@@ -13,7 +14,7 @@ class AlarmHelper {
     const job = scheduler.scheduleJob(alarm.rule, () => {
       const playRandom = (firstRun) => {
         if(!firstRun && player.stopped) return;
-        Media.getRandom()
+        MediaHelper.getRandom()
           .then(media => player.playMedia(media, false, () => {
             setTimeout(playRandom, 1000);
           }));

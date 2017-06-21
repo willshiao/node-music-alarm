@@ -10,6 +10,8 @@ const Media = require('../models/Media');
 const player = require('../lib/player');
 const logger = require('../lib/logger');
 const storage = require('../lib/storage');
+const MediaHelper = require('../lib/media-helper');
+const scan = require('../lib/scan');
 const mediaRoutes = require('./api/media');
 const alarmRoutes = require('./api/alarms');
 
@@ -25,7 +27,7 @@ router.get('/test', (req, res) => {
 
 router.get('/play/random', (req, res) => {
   let current;
-  Media.getRandom()
+  MediaHelper.getRandom()
     .then((media) => {
       logger.debug('Playing random media: ', media);
       current = media;
@@ -88,12 +90,13 @@ router.get('/guess/:id', (req, res) => {
 
     const wasPlaying = player.openMedia;
     let rand;
-    return Media.getRandom()
+    return MediaHelper.getRandom()
       .then((media) => {
         logger.debug('Playing random media: ', media);
         rand = media;
         return player.playMedia(media);
       })
+      .then(() => player.openMedia.increment({ numIncorrect: 1 }))
       .then(() =>
         res.successJson({
           correct: false,
@@ -104,7 +107,8 @@ router.get('/guess/:id', (req, res) => {
       .catch(err => res.errorJson(err));
   }
   logger.debug('Guess correct.');
-  return player.stopMedia()
+  return player.openMedia.increment({ numCorrect: 1 })
+    .thne(() => player.stopMedia())
     .then(() => res.successJson({ correct: true }));
 });
 
@@ -118,6 +122,16 @@ router.get('/stop', (req, res) => {
       if(status) return res.successJson();
       return res.failMsg('No media playing');
     });
+});
+
+router.get('/discover', (req, res) => {
+  scan.discover(config.get('media.dir'))
+    .then(media => Media.bulkCreate(media))
+    .then(() => Media.findAll())
+    .then((media) => {
+      res.successJson({ media });
+    })
+    .catch(err => res.errorJson(err));
 });
 
 module.exports = router;

@@ -39,7 +39,7 @@ const mediaStorage = multer.diskStorage({
 });
 
 router.get('/', (req, res) => {
-  Media.getAll()
+  Media.findAll()
     .then((rows) => {
       res.successJson(rows);
     })
@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
 });
 
 router.delete('/all', (req, res) => {
-  Media.deleteAll()
+  Media.sync({ forced: true })
     .then(() => {
       res.successJson();
     })
@@ -60,13 +60,13 @@ router.post('/upload', mediaUpload.single('mediaFile'), (req, res) => {
   if(!req.body.name) return res.failMsg('No name found.');
   if(!req.file) return res.failMsg('No file found.');
 
-  const media = new Media({
+  const media = {
     path: req.file.path,
     name: req.body.name,
-  });
-  media.save()
-    .then(() => {
-      res.successJson(media);
+  };
+  Media.create(media)
+    .then((built) => {
+      res.successJson(built);
     })
     .catch(err => res.errorJson(err));
 });
@@ -75,13 +75,13 @@ router.post(['/', '/new'], (req, res) => {
   if(!req.body) return res.failMsg('No arguments found');
 
   if(req.body.media && req.body.media.constructor === Array
-  && req.body.media.length > 0) {
+      && req.body.media.length > 0) {
     // Treat as multiple elements
     const media = req.body.media
       .map((m) => {
         if(!m || !m.path || !m.name) return null;
         m.path = addMediaPath(m.path);
-        return new Media(m).save();
+        return Media.create(m);
       })
       .filter(m => m !== null);
 
@@ -95,7 +95,7 @@ router.post(['/', '/new'], (req, res) => {
     return res.failMsg('Missing one or more arguments');
   }
 
-  new Media({
+  Media.create({
     path: addMediaPath(req.body.path),
     name: req.body.name,
   }).save()
