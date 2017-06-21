@@ -125,7 +125,8 @@ router.get('/stop', (req, res) => {
 });
 
 router.get('/discover', (req, res) => {
-  scan.discover(config.get('media.dir'))
+  Media.destroy({ truncate: true })
+    .then(() => scan.discover(config.get('media.dir')))
     .then(media => Media.bulkCreate(media))
     .then(() => Media.findAll())
     .then((media) => {
