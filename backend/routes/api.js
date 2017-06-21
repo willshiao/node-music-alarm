@@ -29,7 +29,7 @@ router.get('/play/random', (req, res) => {
   let current;
   MediaHelper.getRandom()
     .then((media) => {
-      logger.debug('Playing random media: ', media);
+      logger.debug('Playing random media: ', media.name);
       current = media;
       return player.playMedia(current);
     })
@@ -96,7 +96,7 @@ router.get('/guess/:id', (req, res) => {
         rand = media;
         return player.playMedia(media);
       })
-      .then(() => player.openMedia.increment({ numIncorrect: 1 }))
+      .then(() => player.openMedia.increment('numIncorrect'))
       .then(() =>
         res.successJson({
           correct: false,
@@ -107,8 +107,8 @@ router.get('/guess/:id', (req, res) => {
       .catch(err => res.errorJson(err));
   }
   logger.debug('Guess correct.');
-  return player.openMedia.increment({ numCorrect: 1 })
-    .thne(() => player.stopMedia())
+  return player.openMedia.increment('numCorrect')
+    .then(() => player.stopMedia())
     .then(() => res.successJson({ correct: true }));
 });
 
