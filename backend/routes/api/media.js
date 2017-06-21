@@ -49,7 +49,7 @@ router.get('/', (req, res) => {
 });
 
 router.delete('/all', (req, res) => {
-  Media.sync({ forced: true })
+  Media.destroy({ truncate: true })
     .then(() => {
       res.successJson();
     })
