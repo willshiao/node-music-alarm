@@ -1,6 +1,6 @@
 {
   "name": "node-music-alarm",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A alarm system that plays music and quizzes the user on the song's name to stop the alarm.",
   "main": "app.js",
   "scripts": {
