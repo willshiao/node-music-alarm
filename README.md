@@ -10,10 +10,11 @@ Requires `omxplayer` to be installed.
 
 ## Setup
 
-Install the dependencies for the frontend and backend portions by running `npm install` in the `frontend` and `backend` directories.
+Perform the following steps on your Raspberrry Pi:
 
-First, build the frontend portion by running `npm run build` in the `frontend` directory and serve it from your Raspberry Pi.
-
-Next, start the backend portion on your Raspberry Pi by running `npm start` in the `backend` directory.
+1. Clone the repository
+2. Install the dependencies for the frontend and backend portions by running `npm install` in both the `frontend` and `backend` directories.
+3. Build the frontend portion by running `npm run build` in the `frontend` directory and serve it from your Raspberry Pi.
+4. Start the backend portion on your Raspberry Pi by running `npm start` in the `backend` directory.
 
 You should now be able to connect to the music alarm site.
