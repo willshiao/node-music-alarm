@@ -4,6 +4,7 @@ const Omx = require('node-omxplayer');
 const config = require('config');
 const Promise = require('bluebird');
 const logger = require('./logger');
+const socket = require('./socket');
 
 const me = module.exports;
 me.openPlayer = null;  // Currently open player (if any)
@@ -27,6 +28,7 @@ me.playMedia = function playMedia(media, cancelPlaying = true, onClose = null, c
       me.openPlayer = null;
       me.openMedia = null;
       logger.debug('Done playing: ', media.name);
+      socket.emit('player:done');
     });
 
     player.on('error', (err) => {
@@ -34,7 +36,10 @@ me.playMedia = function playMedia(media, cancelPlaying = true, onClose = null, c
     });
 
     return media.increment({ numPlays: 1 })
-      .then(() => Promise.resolve(player));
+      .then(() => {
+        socket.emit('player:play', media);
+        return Promise.resolve(player)
+      });
   };
 
   if(cancelPlaying) {  // Override currently playing media
@@ -59,6 +64,7 @@ me.stopMedia = function stopMedia(cb) {
     me.openPlayer.on('close', () => {
       me.stopped = true;
       logger.debug('Player successfully quit');
+      socket.emit('player:stop');
       return resolve(true);
     });
   }).asCallback(cb);

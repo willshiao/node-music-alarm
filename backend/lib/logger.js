@@ -1,15 +1,10 @@
 'use strict';
 
 const logger = require('winston');
+const config = require('config');
 
 logger.remove(logger.transports.Console);
 
-logger.add(logger.transports.Console, {
-  level: 'debug',
-  prettyPrint: true,
-  colorize: true,
-  silent: false,
-  timestamp: false,
-});
+logger.add(logger.transports.Console, config.get('logger'));
 
 module.exports = logger;

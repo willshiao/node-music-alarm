@@ -21,4 +21,11 @@ module.exports = {
   alarm: {
     guessInterval: 15000,  // Minimium amount of time between guesses, in milliseconds.
   },
+  logger: {
+    level: 'debug',
+    prettyPrint: true,
+    colorize: true,
+    silent: false,
+    timestamp: false,
+  },
 };
