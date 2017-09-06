@@ -65,7 +65,7 @@ me.stopMedia = function stopMedia(cb) {
 };
 
 // Close the player if open
-function cleanUp(code = 0) {  
+function cleanUp(code = 0) {
   if(me.openPlayer !== null) {
     me.openPlayer.quit();
     logger.debug('Shutting down open omxplayer instance');

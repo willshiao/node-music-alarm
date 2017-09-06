@@ -3,7 +3,7 @@
 const Promise = require('bluebird');
 const db = require('./db');
 const Media = require('../models/Media');
-const logger = require('./lib/logger');
+const logger = require('./logger');
 
 class MediaHelper {
   static getRandom() {
