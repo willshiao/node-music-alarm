@@ -4,7 +4,6 @@ const Omx = require('node-omxplayer');
 const config = require('config');
 const Promise = require('bluebird');
 const logger = require('./logger');
-const Media = require('../models/Media');
 
 const me = module.exports;
 me.openPlayer = null;  // Currently open player (if any)
@@ -17,8 +16,8 @@ me.playMedia = function playMedia(media, cancelPlaying = true, onClose = null, c
     if(status) logger.debug('Stopped currently playing media.');
     logger.debug('Playing: ', media.name);
 
-    const player = Omx(media.path, config.get('player.output'), config.get('player.loop'),
-      config.get('player.initialVolume'));
+    const player = Omx(media.path, config.get('player.output'),
+                       config.get('player.loop'), config.get('player.initialVolume'));
     me.openPlayer = player;
     me.openMedia = media;
     me.stopped = false;
@@ -38,11 +37,12 @@ me.playMedia = function playMedia(media, cancelPlaying = true, onClose = null, c
       .then(() => Promise.resolve(player));
   };
 
-  if(cancelPlaying) {
+  if(cancelPlaying) {  // Override currently playing media
     return me.stopMedia()
       .then(play)
       .asCallback(cb);
   }
+
   if(me.openPlayer === null || me.openMedia === null) {  // No media playing
     return play().asCallback(cb);
   }
@@ -65,14 +65,15 @@ me.stopMedia = function stopMedia(cb) {
 };
 
 // Close the player if open
-function cleanUp(code = 0) {
+function cleanUp(exitCode = 0) {
   if(me.openPlayer !== null) {
     me.openPlayer.quit();
     logger.debug('Shutting down open omxplayer instance');
   }
-  process.exit(code);
+  process.exit(exitCode);
 }
 
+// Clean up omxplayer if the node process is ended.
 process.on('exit', cleanUp);
 process.on('SIGINT', cleanUp);
 process.on('uncaughtException', (err) => {

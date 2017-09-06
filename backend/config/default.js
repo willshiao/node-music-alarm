@@ -3,8 +3,7 @@
 const path = require('path');
 
 
-module.exports =
-{
+module.exports = {
   port: 3000,
   db: {
     path: path.resolve(__dirname, '../files/alarm.db'),

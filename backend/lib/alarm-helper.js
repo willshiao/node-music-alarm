@@ -2,7 +2,6 @@
 
 const logger = require('./logger');
 const scheduler = require('node-schedule');
-const Media = require('../models/Media');
 const Alarm = require('../models/Alarm');
 const player = require('./player');
 const storage = require('./storage');
@@ -27,7 +26,7 @@ class AlarmHelper {
 
   static scheduleById(id) {
     return Alarm.findById(id)
-      .then(alarm => AlarmHelper.schedule(alarm));
+      .then(AlarmHelper.schedule);
   }
 
   static cancel(alarm) {

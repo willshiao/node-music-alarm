@@ -5,7 +5,6 @@ const express = require('express');
 
 const Alarm = require('./models/Alarm');
 const Media = require('./models/Media');
-const db = require('./lib/db');
 const AlarmHelper = require('./lib/alarm-helper');
 const logger = require('./lib/logger');
 require('./lib/extend').extendResponse(express.response);
@@ -27,7 +26,7 @@ Alarm.sync({ force: false })
     return Alarm.findAll({ where: { enabled: true } });  // Only get enabled alarms
   })
   .then((alarms) => {
-    alarms.forEach(alarm => AlarmHelper.schedule(alarm));
+    alarms.forEach(AlarmHelper.schedule);
     logger.info('Done loading all alarms.');
   })
   .catch(logger.error);
