@@ -124,7 +124,7 @@ router.get('/play/:id', (req, res) => {
     return res.failMsg('Invalid ID');
   }
   const id = parseInt(req.params.id, 10);
-  Media.getById(id)
+  Media.findById(id)
     .then((media) => {
       if(!media) {
         res.failJson('No media with that ID found');
